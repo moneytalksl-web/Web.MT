@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MONEYTALKS — Home</title>
+  <meta name="description" content="We have true platform where you can earn real cryptocurrency. Start your crypto earning journey from here." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+  
+  <!-- GLOBAL CSS -->
+  <style>
+    /* shared.css - Global styles */
+    .btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; position: relative; overflow: hidden; }
+    .btn:active { transform: translateY(2px) !important; }
+    .card { transition: transform 0.3s ease, box-shadow 0.3s ease !important; }
+    .card:hover { transform: translateY(-5px) !important; box-shadow: 0 20px 40px rgba(0,0,0,0.3) !important; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #8E2DE2, #00E676); border-radius: 4px; }
+    ::selection { background: rgba(142, 45, 226, 0.3); color: white; }
+    :focus { outline: 2px solid #8E2DE2; outline-offset: 2px; }
+    .loading-spinner { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1); border-top-color: #8E2DE2; border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .gradient-text { background: linear-gradient(90deg, #8E2DE2, #00E676); -webkit-background-clip: text; background-clip: text; color: transparent; display: inline-block; }
+    .pulse { animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+    .fade-in { animation: fadeIn 0.5s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) { .hide-mobile { display: none !important; } .mobile-stack { flex-direction: column !important; } .mobile-center { text-align: center !important; } }
+    @media print { .no-print { display: none !important; } }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+    [data-tooltip] { position: relative; }
+    [data-tooltip]:hover::after { content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; white-space: nowrap; z-index: 1000; pointer-events: none; }
+  </style>
+  
+  <style>
+    :root{
+      --purple:#8E2DE2;
+      --green:#00E676;
+      --text:#ffffff;
+      --muted:#cbd5e1;
+      --overlay:rgba(0,0,0,.35);
+      --btn-blue:#eaf2ff;
+      --btn-blue-border:#c7dbff;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--text);
+      font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+      background:
+        radial-gradient(1200px 600px at 80% -10%, rgba(142,45,226,.28), transparent 60%),
+        radial-gradient(1000px 600px at -10% 90%, rgba(0,230,118,.25), transparent 60%),
+        linear-gradient(120deg, #0d0221 0%, #0a0f2c 35%, #051f1b 100%);
+      overflow-x: hidden;
+    }
+    .hero{ 
+      position:relative; 
+      min-height:100svh; 
+      display:flex; 
+      align-items:center; 
+      justify-content:center; 
+      text-align:center; 
+      padding:clamp(20px,4vw,48px); 
+      overflow: hidden;
+    }
+    .hero::after{ content:""; position:absolute; inset:0; background:var(--overlay); }
+    .container{ position:relative; z-index:1; max-width:1100px; width:100%; margin-inline:auto; }
+
+    /* Logo */
+    .logo{ 
+      display:inline-flex; 
+      align-items:center; 
+      gap:12px; 
+      margin-bottom:18px;
+      opacity: 0;
+      transform: translateY(-100px);
+      transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .logo.animate {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .logo-mark{ 
+      width:60px; 
+      height:60px; 
+      border-radius:18px; 
+      display:grid; 
+      place-items:center; 
+      position:relative; 
+      overflow:hidden;
+      background: conic-gradient(from 180deg, var(--purple), var(--green) 60%, var(--purple));
+      box-shadow: 0 12px 28px rgba(0,230,118,.22), 0 10px 26px rgba(142,45,226,.22);
+    }
+    .logo-mark span{ font-weight:900; font-size:22px; letter-spacing:1px; color:#fff; text-shadow:0 2px 8px rgba(0,0,0,.5) }
+    .logo-text{ 
+      font-weight:900; 
+      font-size:clamp(22px,3vw,28px); 
+      letter-spacing:.12em; 
+      text-transform:uppercase;
+      background: linear-gradient(90deg, var(--purple), var(--green)); 
+      -webkit-background-clip:text; 
+      background-clip:text; 
+      color:transparent; 
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: all 0.8s ease 0.3s;
+    }
+    .logo-text.animate {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Welcome message */
+    .welcome-message {
+      font-size: clamp(24px, 4vw, 36px);
+      font-weight: 800;
+      margin: 20px 0;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.8s ease 0.6s;
+      position: relative;
+      display: inline-block;
+    }
+    .welcome-message.animate {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .welcome-message::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--purple), var(--green));
+      opacity: 0;
+      z-index: -1;
+      filter: blur(20px);
+      transition: opacity 0.8s ease 0.8s;
+    }
+    .welcome-message.lighting::after {
+      opacity: 0.7;
+    }
+
+    /* Crypto animation */
+    .crypto-animation {
+      height: 80px;
+      margin: 20px 0;
+      position: relative;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease 1s;
+    }
+    .crypto-animation.animate {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .coin {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple), var(--green));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      opacity: 0;
+    }
+    .coin:nth-child(1) { top: 0; left: 10%; animation: float-coin 4s ease-in-out infinite 1.8s; }
+    .coin:nth-child(2) { top: 10px; left: 30%; animation: float-coin 4s ease-in-out infinite 2s; }
+    .coin:nth-child(3) { top: 20px; left: 50%; animation: float-coin 4s ease-in-out infinite 2.2s; }
+    .coin:nth-child(4) { top: 10px; left: 70%; animation: float-coin 4s ease-in-out infinite 2.4s; }
+    .coin:nth-child(5) { top: 0; left: 90%; animation: float-coin 4s ease-in-out infinite 2.6s; }
+
+    @keyframes float-coin {
+      0%, 100% { transform: translateY(0); opacity: 0.7; }
+      50% { transform: translateY(-20px); opacity: 1; }
+    }
+
+    /* Typography */
+    h1{ 
+      font-size:clamp(42px,7vw,86px); 
+      margin:0 0 10px; 
+      font-weight:900; 
+      letter-spacing:.06em;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease 1.4s;
+    }
+    h1.animate {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    h2{ 
+      font-size:clamp(13px,2.5vw,18px); 
+      font-weight:800; 
+      margin:0 0 32px; 
+      letter-spacing:.28em; 
+      color:var(--muted);
+      text-transform:uppercase;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease 1.6s;
+    }
+    h2.animate {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    p.lead{ 
+      font-size:clamp(16px,2.2vw,22px); 
+      margin:10px 0 8px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease 1.8s;
+    }
+    p.lead.animate {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    p.sublead{ 
+      font-size:clamp(14px,2vw,18px); 
+      margin:0 0 28px; 
+      color:var(--muted);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease 2s;
+    }
+    p.sublead.animate {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Buttons */
+    .cta-row{ 
+      display:flex; 
+      flex-wrap:wrap; 
+      gap:12px; 
+      align-items:center; 
+      justify-content:center; 
+      margin:24px 0 48px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease 2.2s;
+    }
+    .cta-row.animate {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .btn{ 
+      --radius:999px; 
+      display:inline-flex; 
+      align-items:center; 
+      justify-content:center; 
+      gap:.6rem;
+      padding:14px 22px; 
+      border-radius:var(--radius); 
+      text-decoration:none; 
+      font-weight:800; 
+      border:1px solid transparent;
+      transition:transform .15s ease, box-shadow .2s ease, filter .2s ease, background .2s ease, color .2s ease; 
+    }
+    .btn:hover{ transform:translateY(-1px) }
+    .btn:active{ transform:translateY(0) }
+
+    .btn-primary{ 
+      background:linear-gradient(180deg,#ffffff,var(--btn-blue)); 
+      color:#0b3b8d; 
+      border-color:var(--btn-blue-border);
+      box-shadow:0 12px 24px rgba(13,59,141,.25), 0 3px 8px rgba(13,59,141,.25); 
+    }
+    .btn-primary:hover{ filter:brightness(1.02) }
+    .btn-primary:active{ filter:brightness(.98) }
+
+    .btn-ghost{ 
+      background:transparent; 
+      color:#fff; 
+      border-color:rgba(255,255,255,.35); 
+      backdrop-filter: blur(2px); 
+    }
+    .btn-ghost:hover{ background: rgba(255,255,255,.08) }
+
+    .divider{ 
+      width:100%; 
+      height:1px; 
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.25), transparent); 
+      margin:28px 0;
+      opacity: 0;
+      transform: scaleX(0);
+      transition: all 0.8s ease 2.4s;
+    }
+    .divider.animate {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+
+    .section{ 
+      padding:clamp(20px,5vw,64px) 24px; 
+      text-align:center;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease 2.6s;
+    }
+    .section.animate {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .section h3{ 
+      font-size:clamp(20px,3.2vw,30px); 
+      letter-spacing:.06em; 
+      margin:0 0 14px; 
+      font-weight:900; 
+      text-transform:uppercase 
+    }
+    .section .subtext{ 
+      color:var(--muted); 
+      font-size:clamp(13px,2vw,16px); 
+      margin-top:8px 
+    }
+
+    .footer{ 
+      text-align:center; 
+      padding:28px 16px; 
+      color:var(--muted) 
+    }
+
+    /* Small sparkle accent */
+    .sparkle{ 
+      position:absolute; 
+      inset:0; 
+      pointer-events:none; 
+      opacity:.3; 
+      mix-blend-mode:screen 
+    }
+    .sparkle i{ 
+      position:absolute; 
+      width:2px; 
+      height:2px; 
+      background:#fff; 
+      border-radius:50%; 
+      filter:blur(.3px); 
+    }
+
+    /* Auth buttons */
+    .auth-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 20px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease 2.8s;
+    }
+    .auth-buttons.animate {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Video Container */
+    .video-container {
+      margin: 40px 0;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease 3s;
+    }
+    
+    .video-container.animate {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      border: 2px solid rgba(142,45,226,0.3);
+    }
+    
+    .video-wrapper iframe {
+      width: 100%;
+      height: 450px;
+      border: none;
+      display: block;
+    }
+    
+    .video-label {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: var(--muted);
+    }
+
+    @media (prefers-reduced-motion:no-preference){
+      .float{ animation:float 8s ease-in-out infinite }
+      @keyframes float{ 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-8px) } }
+      .twinkle{ animation: twinkle 2.2s ease-in-out infinite alternate }
+      @keyframes twinkle{ from{ opacity:.15 } to{ opacity:.6 } }
+    }
+
+    @media (max-width: 768px) {
+      .auth-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .video-wrapper iframe {
+        height: 250px;
+      }
+      
+      .video-label {
+        font-size: 16px;
+      }
+    }
+
+    /* New Stats Preview Styles */
+    .stats-preview {
+      margin: 30px 0;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease 2.8s;
+    }
+    
+    .stats-preview.animate {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .testimonials {
+      margin: 50px 0;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease 3.2s;
+    }
+    
+    .testimonials.animate {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes slideOut {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
+    }
+
+    @keyframes ticker {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+  </style>
+</head>
+<body>
+<!-- Language selector (fixed top-right) -->
+<div id="mt_lang_selector_container" style="position:fixed;top:12px;right:12px;z-index:9999;font-family:Inter,system-ui,Segoe UI,Roboto;">
+  <label style="display:inline-flex;align-items:center;gap:8px;font-weight:700;color:#cbd5e1;background:rgba(0,0,0,0.25);padding:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(4px);">
+    <span>🌐</span>
+    <select id="mt_lang_select" style="background:transparent;color:#fff;padding:6px;border-radius:6px;border:0;">
+      <option value="en">EN</option><option value="hi">HI</option><option value="ur">UR</option>
+      <option value="ar">AR</option><option value="zh">ZH</option><option value="ja">JA</option>
+      <option value="ko">KO</option><option value="ru">RU</option><option value="de">DE</option>
+      <option value="es">ES</option><option value="fr">FR</option><option value="tr">TR</option>
+      <option value="pt">PT</option><option value="id">ID</option>
+    </select>
+  </label>
+</div>
+
+<!-- MONEYTALKS Loader -->
+<style id="mt_loader_style">
+#mt_loader_overlay{position:fixed;inset:0;background:linear-gradient(120deg,#071026,#051f1b);display:flex;align-items:center;justify-content:center;z-index:100000;color:#fff}
+#mt_loader_box{display:flex;flex-direction:column;align-items:center;gap:12px}
+#mt_loader_logo{font-weight:900;font-size:34px;letter-spacing:4px;color:#ffd86b;text-shadow:0 4px 30px rgba(255,220,107,0.12);opacity:0;transform:translateY(6px);transition:all 600ms ease}
+#mt_loader_sub{color:#cbd5e1;opacity:0;transform:translateY(6px);transition:all 600ms ease 200ms;font-size:14px}
+.mt_loader_show #mt_loader_logo, .mt_loader_show #mt_loader_sub{opacity:1;transform:translateY(0)}
+</style>
+<div id="mt_loader_overlay"><div id="mt_loader_box"><div id="mt_loader_logo">MONEYTALKS</div><div id="mt_loader_sub">Welcome — preparing your experience</div></div></div>
+<script>
+(function(){
+  try{
+    document.documentElement.classList.add('mt_loader_show');
+    window.addEventListener('load', function(){ setTimeout(hideLoader, 800); });
+    function hideLoader(){
+      var el = document.getElementById('mt_loader_overlay');
+      if(!el) return;
+      el.style.transition = 'opacity 420ms ease';
+      el.style.opacity = '0';
+      setTimeout(function(){ el.parentNode && el.parentNode.removeChild(el); }, 600);
+    }
+    setTimeout(hideLoader, 3000);
+  }catch(e){}
+})();
+</script>
+<!-- end loader -->
+
+  <header class="sr-only" aria-hidden="true">MONEYTALKS</header>
+
+  <main class="hero" role="main">
+    <div class="container">
+      <!-- Logo -->
+      <div class="logo" aria-label="MoneyTalks logo">
+        <div class="logo-mark" aria-hidden="true"><span>MT</span></div>
+        <div class="logo-text">MoneyTalks</div>
+      </div>
+
+      <!-- Welcome Message -->
+      <div class="welcome-message">Welcome to MoneyTalks</div>
+
+      <!-- Crypto Animation -->
+      <div class="crypto-animation">
+        <div class="coin">₿</div>
+        <div class="coin">Ξ</div>
+        <div class="coin">$</div>
+        <div class="coin">€</div>
+        <div class="coin">£</div>
+      </div>
+
+      <!-- Main Heading -->
+      <h1>MONEYTALKS</h1>
+      <h2>NOW YOU ARE IN RIGHT PLACE</h2>
+
+      <!-- Content -->
+      <p class="lead">We have true platform where you can earn real cryptocurrency.</p>
+      <p class="sublead">Start your crypto earning journey from here</p>
+
+      <!-- CTA Buttons -->
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://autofaucet.org/r/Saadq123" target="_blank" rel="noopener noreferrer" aria-label="Free Crypto Link">
+          🚀 Free Crypto Link
+        </a>
+        <a class="btn btn-ghost" href="#more" aria-label="Learn more about MoneyTalks">Learn more</a>
+      </div>
+
+      <!-- Stats Preview Section -->
+      <div class="stats-preview">
+        <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
+          <div class="stat" style="text-align: center; padding: 15px; min-width: 120px;">
+            <strong id="active-users" style="display: block; font-size: 32px; background: linear-gradient(90deg, var(--purple), var(--green)); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 5px;">571+</strong>
+            <span style="color: var(--muted); font-size: 14px;">Active Earners</span>
+          </div>
+          <div class="stat" style="text-align: center; padding: 15px; min-width: 120px;">
+            <strong id="total-earned" style="display: block; font-size: 32px; background: linear-gradient(90deg, var(--purple), var(--green)); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 5px;">$2,871+</strong>
+            <span style="color: var(--muted); font-size: 14px;">Total Earned</span>
+          </div>
+          <div class="stat" style="text-align: center; padding: 15px; min-width: 120px;">
+            <strong id="links-count" style="display: block; font-size: 32px; background: linear-gradient(90deg, var(--purple), var(--green)); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 5px;">63+</strong>
+            <span style="color: var(--muted); font-size: 14px;">Verified Sites</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- YouTube Video Section -->
+      <div class="video-container">
+        <div class="video-label">Watch how MoneyTalks works:</div>
+        <div class="video-wrapper">
+          <iframe 
+            src="https://www.youtube.com/embed/Z2JWKpKAY-M" 
+            title="MoneyTalks Platform Overview" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+          </iframe>
+        </div>
+      </div>
+
+      <!-- Testimonials Section -->
+      <section class="testimonials">
+        <h3 style="font-size: clamp(18px, 2.5vw, 24px); margin-bottom: 25px; color: var(--muted);">What Our Users Say</h3>
+        <div class="testimonial-slider" style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+          <div class="testimonial" style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; max-width: 300px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+            <p style="font-style: italic; margin: 0 0 10px 0;">"Made $50 in my first week! Best platform for crypto beginners."</p>
+            <span style="color: var(--green); font-weight: 600;">- Alex, USA</span>
+          </div>
+          <div class="testimonial" style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; max-width: 300px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+            <p style="font-style: italic; margin: 0 0 10px 0;">"The curated links are gold. No more searching through scam sites."</p>
+            <span style="color: var(--green); font-weight: 600;">- Maria, Spain</span>
+          </div>
+          <div class="testimonial" style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; max-width: 300px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+            <p style="font-style: italic; margin: 0 0 10px 0;">"Referral system is amazing. Earned $200 from invites alone!"</p>
+            <span style="color: var(--green); font-weight: 600;">- Raj, India</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Auth Buttons -->
+      <div class="auth-buttons">
+        <a class="btn btn-primary" href="login and registration.html" aria-label="Go to Login">
+          🔑 Login
+        </a>
+        <a class="btn btn-ghost" href="login and registration.html" aria-label="Go to Registration">
+          📝 Register
+        </a>
+      </div>
+
+      <div class="divider" aria-hidden="true"></div>
+
+      <section class="section" id="more">
+        <h3>IF YOU WANT TO EARN MORE CRYPTOCURRENCY JOIN US.</h3>
+        <p class="subtext">Access your account to unlock premium earning links and your dashboard.</p>
+        <div class="cta-row">
+          <a class="btn btn-ghost" href="login and registration.html" aria-label="Go to Login or Registration">
+            🔑 Go to Login / Registration
+          </a>
+        </div>
+      </section>
+
+      <!-- Decorative sparkles -->
+      <div class="sparkle" aria-hidden="true">
+        <i style="top:10%; left:18%" class="twinkle"></i>
+        <i style="top:22%; left:78%" class="twinkle"></i>
+        <i style="top:66%; left:12%" class="twinkle"></i>
+        <i style="top:72%; left:62%" class="twinkle"></i>
+        <i style="top:40%; left:42%" class="twinkle"></i>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <small>© <span id="y"></span> MoneyTalks. All rights reserved.</small>
+  </footer>
+
+  <script>
+    // Set current year in footer
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Animation sequence
+    document.addEventListener('DOMContentLoaded', function() {
+      const elements = [
+        document.querySelector('.logo'),
+        document.querySelector('.logo-text'),
+        document.querySelector('.welcome-message'),
+        document.querySelector('.crypto-animation'),
+        document.querySelector('h1'),
+        document.querySelector('h2'),
+        document.querySelector('.lead'),
+        document.querySelector('.sublead'),
+        document.querySelector('.cta-row'),
+        document.querySelector('.stats-preview'),
+        document.querySelector('.video-container'),
+        document.querySelector('.testimonials'),
+        document.querySelector('.auth-buttons'),
+        document.querySelector('.divider'),
+        document.querySelector('.section')
+      ];
+
+      // Add animation classes with delays
+      elements.forEach((el, index) => {
+        if (el) {
+          setTimeout(() => {
+            el.classList.add('animate');
+            
+            // Add lighting effect to welcome message
+            if (el.classList.contains('welcome-message')) {
+              setTimeout(() => {
+                el.classList.add('lighting');
+              }, 800);
+            }
+          }, index * 200);
+        }
+      });
+
+      // Make coins visible with delay
+      const coins = document.querySelectorAll('.coin');
+      coins.forEach((coin, index) => {
+        setTimeout(() => {
+          coin.style.opacity = '0.7';
+        }, 1800 + (index * 200));
+      });
+    });
+
+    // Show recent winner notification
+    function showRecentWinner() {
+      const winners = [
+        "Sarah just won $2.50!",
+        "Mike earned 3 new links!",
+        "Alex got a Gold Plan!",
+        "Jamie referred 2 friends!"
+      ];
+      
+      const message = winners[Math.floor(Math.random() * winners.length)];
+      showNotification(message, 'success');
+    }
+
+    function showNotification(message, type = 'info') {
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#00E676' : '#8E2DE2'};
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+      `;
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+      }, 3000);
+    }
+
+    // Start showing winners every 2 minutes
+    setTimeout(() => {
+      setInterval(showRecentWinner, 120000);
+    }, 10000);
+
+    // Feature discovery
+    function showFeatureDiscovery() {
+      if (!localStorage.getItem('feature_shown_welcome')) {
+        setTimeout(() => {
+          showNotification('✨ Pro Tip: Try our demo mode without registration!', 'info');
+          localStorage.setItem('feature_shown_welcome', 'true');
+        }, 5000);
+      }
+    }
+    showFeatureDiscovery();
+  </script>
+
+<footer style="margin-top:40px;padding:18px 12px;text-align:center;color:#9fb0dd;border-top:1px solid rgba(255,255,255,0.03);">
+  <div style="max-width:1000px;margin:0 auto;">
+    <div style="margin-bottom:6px;">© MONEYTALKS • Contact: <a href="mailto:themoneytalks.web@gmail.com" style="color:#9fb0dd;text-decoration:none;">themoneytalks.web@gmail.com</a></div>
+    <div style="display:flex;gap:12px;justify-content:center;font-size:14px;">
+      <a href="about.html" style="color:#9fb0dd;text-decoration:none;">About</a>
+      <a href="policy.html" style="color:#9fb0dd;text-decoration:none;">Policy</a>
+      <a href="faq.html" style="color:#9fb0dd;text-decoration:none;">FAQ</a>
+    </div>
+  </div>
+</footer>
+<script src="lang/translate.local.js"></script>
+
+<!-- GLOBAL ENHANCEMENTS SCRIPT -->
+<script>
+// Global Enhancements for MoneyTalks
+function checkFirstVisit() { if (!localStorage.getItem('first_visit')) { setTimeout(() => { showNotification('👋 Welcome to MoneyTalks!', 'info'); localStorage.setItem('first_visit', 'true'); }, 2000); } }
+function showPeriodicNotifications() { const n = ["💡 Complete daily goals!","🎰 Try the casino game!","👥 Invite friends!","📈 Upgrade your plan!"]; setInterval(() => { showNotification(n[Math.floor(Math.random()*n.length)], 'info'); }, 300000); }
+function showNotification(m,t='info') { const s={success:{bg:'#00E676',icon:'✅'},error:{bg:'#ff4757',icon:'❌'},warning:{bg:'#ffa502',icon:'⚠️'},info:{bg:'#8E2DE2',icon:'💡'}}[t]||{bg:'#8E2DE2',icon:'💡'}; document.querySelectorAll('.global-notification').forEach(e=>e.remove()); const n=document.createElement('div'); n.className='global-notification'; n.style.cssText=`position:fixed;top:20px;right:20px;background:${s.bg};color:white;padding:12px 20px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.3);z-index:10000;animation:slideIn 0.3s ease;display:flex;align-items:center;gap:10px;max-width:350px;font-family:Inter,sans-serif;`; n.innerHTML=`${s.icon} ${m}`; document.body.appendChild(n); setTimeout(()=>{n.style.animation='slideOut 0.3s ease';setTimeout(()=>n.remove(),300);},3000);}
+function initThemeToggle() { if(document.querySelector('.theme-toggle'))return; const t=localStorage.getItem('moneytalks_theme')||'dark'; applyTheme(t); const l=document.getElementById('mt_lang_selector_container'); if(l){ const b=document.createElement('div'); b.className='theme-toggle'; b.style.cssText=`display:inline-flex;align-items:center;gap:8px;font-weight:700;color:#cbd5e1;background:rgba(0,0,0,0.25);padding:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(4px);margin-left:8px;cursor:pointer;`; b.innerHTML=t=='dark'?'🌙':'☀️'; b.title='Toggle theme'; b.addEventListener('click',function(){ const c=localStorage.getItem('moneytalks_theme')||'dark'; const n=c=='dark'?'light':'dark'; localStorage.setItem('moneytalks_theme',n); applyTheme(n); this.innerHTML=n=='dark'?'🌙':'☀️'; showNotification(`${n} theme`,'info');}); l.parentNode.insertBefore(b,l.nextSibling);}}
+function applyTheme(t){ if(t=='light'){ document.documentElement.style.setProperty('--bg-dark','#f8fafc'); document.documentElement.style.setProperty('--bg-mid','#e2e8f0'); document.documentElement.style.setProperty('--text','#1e293b'); document.documentElement.style.setProperty('--muted','#64748b'); } else { document.documentElement.style.setProperty('--bg-dark','#0d0221'); document.documentElement.style.setProperty('--bg-mid','#0a0f2c'); document.documentElement.style.setProperty('--text','#ffffff'); document.documentElement.style.setProperty('--muted','#cbd5e1'); }}
+function initCopyFunctionality(){ document.addEventListener('click',function(e){ if(e.target.classList.contains('copy-btn')||e.target.closest('.copy-btn')){ const i=document.querySelector('input[readonly]')||e.target.previousElementSibling; if(i){ i.select(); navigator.clipboard.writeText(i.value).then(()=>{ showNotification('Copied!','success'); }); }}});}
+document.addEventListener('DOMContentLoaded',function(){ checkFirstVisit(); initThemeToggle(); initCopyFunctionality(); setTimeout(()=>showPeriodicNotifications(),10000); setTimeout(()=>{ document.querySelectorAll('.btn-primary').forEach(el=>{ el.classList.add('pulse'); setTimeout(()=>el.classList.remove('pulse'),6000);});},3000);});
+</script>
+</body>
+</html>

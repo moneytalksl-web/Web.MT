@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - MoneyTalks</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --purple: #8E2DE2;
+            --green: #00E676;
+            --text: #ffffff;
+            --muted: #cbd5e1;
+            --bg-dark: #0d0221;
+            --bg-mid: #0a0f2c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(120deg, var(--bg-dark) 0%, var(--bg-mid) 35%, #051f1b 100%);
+            color: var(--text);
+            padding: 40px 20px;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(142,45,226,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .container::before {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--purple), var(--green));
+            border-radius: 20px 20px 0 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        h1 {
+            color: var(--green);
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        
+        .last-updated {
+            color: var(--muted);
+            margin-bottom: 30px;
+            font-size: 14px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        h2 {
+            color: var(--purple);
+            margin: 30px 0 15px 0;
+            font-size: 22px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            margin: 15px 0 15px 30px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .data-table th {
+            background: rgba(142,45,226,0.2);
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .data-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background: linear-gradient(90deg, var(--purple), var(--green));
+            color: white;
+            text-decoration: none;
+            border-radius: 999px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(142,45,226,0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 26px;
+            }
+            
+            h2 {
+                font-size: 20px;
+            }
+            
+            .data-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MoneyTalks Privacy Policy</h1>
+        <p class="last-updated"><strong>Last Updated:</strong> December 2023</p>
+        
+        <p>Your privacy is important to us. This Privacy Policy explains how MoneyTalks collects, uses, and protects your information.</p>
+        
+        <h2>1. Information We Collect</h2>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Data Type</th>
+                    <th>What We Collect</th>
+                    <th>Why We Collect It</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Account Data</strong></td>
+                    <td>Email address, username</td>
+                    <td>Account creation and verification</td>
+                </tr>
+                <tr>
+                    <td><strong>Usage Data</strong></td>
+                    <td>Pages visited, clicks, preferences</td>
+                    <td>Improve user experience</td>
+                </tr>
+                <tr>
+                    <td><strong>Browser Data</strong></td>
+                    <td>LocalStorage data (balance, settings)</td>
+                    <td>Remember your preferences</td>
+                </tr>
+                <tr>
+                    <td><strong>Payment Data</strong></td>
+                    <td>Processed by PayPal (we don't see card details)</td>
+                    <td>Plan purchases</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h2>2. How We Use Your Information</h2>
+        <ul>
+            <li><strong>Provide Services:</strong> To operate and maintain MoneyTalks</li>
+            <li><strong>Communication:</strong> Send verification emails and updates</li>
+            <li><strong>Improvement:</strong> Analyze usage to improve our services</li>
+            <li><strong>Security:</strong> Protect against fraud and abuse</li>
+            <li><strong>Legal Compliance:</strong> Meet legal obligations</li>
+        </ul>
+        
+        <h2>3. Data Storage & Security</h2>
+        <p><strong>Storage Location:</strong> Your data is stored in your browser's LocalStorage and temporary server sessions.</p>
+        <p><strong>Security Measures:</strong> We use standard security practices, but no online service is 100% secure.</p>
+        <p><strong>Data Retention:</strong> We retain data as long as your account is active or as needed for legal purposes.</p>
+        
+        <h2>4. Third-Party Services</h2>
+        <p>We use these trusted services:</p>
+        <ul>
+            <li><strong>PayPal:</strong> For secure payment processing</li>
+            <li><strong>EmailJS:</strong> For sending verification emails</li>
+            <li><strong>Google Fonts:</strong> For typography</li>
+            <li><strong>YouTube:</strong> Embedded videos</li>
+        </ul>
+        <p>Each service has its own privacy policy. We recommend reviewing them.</p>
+        
+        <h2>5. Cookies & LocalStorage</h2>
+        <p>We use browser LocalStorage to:</p>
+        <ul>
+            <li>Remember your login status</li>
+            <li>Save your theme preference</li>
+            <li>Store your balance and plan information</li>
+            <li>Track referral links</li>
+        </ul>
+        <p>You can clear this data anytime via browser settings.</p>
+        
+        <h2>6. Your Rights</h2>
+        <p>You have the right to:</p>
+        <ul>
+            <li><strong>Access:</strong> Request what data we have</li>
+            <li><strong>Correction:</strong> Correct inaccurate data</li>
+            <li><strong>Deletion:</strong> Request data deletion</li>
+            <li><strong>Opt-out:</strong> Stop marketing communications</li>
+        </ul>
+        <p>To exercise these rights, email: <strong>themoneytalks.web@gmail.com</strong></p>
+        
+        <h2>7. Children's Privacy</h2>
+        <p>MoneyTalks is not intended for children under 18. We do not knowingly collect data from children.</p>
+        
+        <h2>8. International Transfers</h2>
+        <p>Our services are hosted globally. Your data may be processed outside your country.</p>
+        
+        <h2>9. Changes to Privacy Policy</h2>
+        <p>We may update this policy. We'll notify you of significant changes via email or site notice.</p>
+        
+        <h2>10. Contact Us</h2>
+        <p>For privacy questions or concerns:</p>
+        <p><strong>Email:</strong> themoneytalks.web@gmail.com</p>
+        <p><strong>Response Time:</strong> We aim to respond within 7 business days.</p>
+        
+        <a href="homepage.html" class="btn">← Back to Homepage</a>
+    </div>
+</body>
+</html>

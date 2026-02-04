@@ -1,0 +1,920 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MONEYTALKS — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+  
+  <!-- GLOBAL CSS -->
+  <style>
+    /* shared.css - Global styles */
+    .btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; position: relative; overflow: hidden; }
+    .btn:active { transform: translateY(2px) !important; }
+    .card { transition: transform 0.3s ease, box-shadow 0.3s ease !important; }
+    .card:hover { transform: translateY(-5px) !important; box-shadow: 0 20px 40px rgba(0,0,0,0.3) !important; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #8E2DE2, #00E676); border-radius: 4px; }
+    ::selection { background: rgba(142, 45, 226, 0.3); color: white; }
+    :focus { outline: 2px solid #8E2DE2; outline-offset: 2px; }
+    .loading-spinner { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1); border-top-color: #8E2DE2; border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .gradient-text { background: linear-gradient(90deg, #8E2DE2, #00E676); -webkit-background-clip: text; background-clip: text; color: transparent; display: inline-block; }
+    .pulse { animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+    .fade-in { animation: fadeIn 0.5s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) { .hide-mobile { display: none !important; } .mobile-stack { flex-direction: column !important; } .mobile-center { text-align: center !important; } }
+    @media print { .no-print { display: none !important; } }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+    [data-tooltip] { position: relative; }
+    [data-tooltip]:hover::after { content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; white-space: nowrap; z-index: 1000; pointer-events: none; }
+  </style>
+  
+  <style>
+    :root{
+      --purple:#8E2DE2; --green:#00E676;
+      --text:#ffffff; --muted:#cbd5e1;
+      --btn-blue:#eaf2ff; --btn-blue-border:#c7dbff;
+      --card-bg:rgba(255,255,255,.05);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; color:var(--text);
+      font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background:
+        radial-gradient(1200px 600px at 80% -10%, rgba(142,45,226,.28), transparent 60%),
+        radial-gradient(1000px 600px at -10% 90%, rgba(0,230,118,.25), transparent 60%),
+        linear-gradient(120deg, #0d0221 0%, #0a0f2c 35%, #051f1b 100%);
+      padding:20px;
+      position: relative;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    
+    /* Animated Background Elements */
+    .bg-animation {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    
+    .bg-element {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.1;
+    }
+    
+    .bg-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--purple);
+      top: -150px;
+      right: -100px;
+      animation: float 18s ease-in-out infinite;
+    }
+    
+    .bg-2 {
+      width: 500px;
+      height: 500px;
+      background: var(--green);
+      bottom: -200px;
+      left: -200px;
+      animation: float 22s ease-in-out infinite reverse;
+    }
+    
+    .container{ 
+      max-width:1100px; 
+      margin:0 auto;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease-out 0.3s forwards;
+    }
+    
+    .logo{ 
+      display:flex; 
+      align-items:center; 
+      gap:12px; 
+      margin-bottom:20px;
+      opacity: 0;
+      transform: translateY(-20px);
+      animation: fadeInDown 0.6s ease-out 0.5s forwards;
+    }
+    
+    .logo-mark{ 
+      width:50px; 
+      height:50px; 
+      border-radius:14px; 
+      display:grid; 
+      place-items:center;
+      background:conic-gradient(from 180deg, var(--purple), var(--green) 60%, var(--purple));
+      box-shadow:0 6px 14px rgba(0,230,118,.22), 0 5px 14px rgba(142,45,226,.22);
+      animation: logoPulse 3s ease-in-out infinite;
+    }
+    
+    .logo-mark span{ 
+      font-weight:900; 
+      font-size:20px; 
+      color:#fff;
+      animation: textGlow 2s ease-in-out infinite alternate;
+    }
+    
+    .logo-text{ 
+      font-weight:900; 
+      font-size:22px; 
+      letter-spacing:.1em;
+      background:linear-gradient(90deg, var(--purple), var(--green));
+      -webkit-background-clip:text; 
+      background-clip:text; 
+      color:transparent;
+      animation: gradientShift 4s ease-in-out infinite;
+    }
+    
+    h1{ 
+      font-size:26px; 
+      margin:0 0 30px;
+      opacity: 0;
+      animation: fadeIn 0.6s ease-out 0.7s forwards;
+    }
+
+    .grid{ 
+      display:grid; 
+      gap:24px;
+    }
+    
+    @media(min-width:768px){
+      .grid-2{ grid-template-columns:1fr 1fr; }
+      .grid-3{ grid-template-columns:1fr 1fr 1fr; }
+    }
+
+    .card{
+      background:var(--card-bg); 
+      backdrop-filter:blur(12px);
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:20px; 
+      padding:24px;
+      box-shadow:0 12px 28px rgba(0,0,0,.25);
+      transition: transform .3s ease, box-shadow .3s ease;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: cardEntrance 0.6s ease-out forwards;
+    }
+    
+    .card:nth-child(1) { animation-delay: 0.9s; }
+    .card:nth-child(2) { animation-delay: 1.0s; }
+    .card:nth-child(3) { animation-delay: 1.1s; }
+    .card:nth-child(4) { animation-delay: 1.2s; }
+    .card:nth-child(5) { animation-delay: 1.3s; }
+    .card:nth-child(6) { animation-delay: 1.4s; }
+    
+    .card:hover{ 
+      transform:translateY(-5px);
+      box-shadow: 0 16px 32px rgba(0,0,0,.3), 0 0 20px rgba(142,45,226,.15);
+    }
+    
+    .card h2{ 
+      font-size:20px; 
+      margin:0 0 16px; 
+      font-weight:800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .card h2::before {
+      content: '';
+      width: 6px;
+      height: 20px;
+      background: linear-gradient(to bottom, var(--purple), var(--green));
+      border-radius: 3px;
+    }
+
+    .stat-row{ 
+      display:flex; 
+      flex-wrap:wrap; 
+      gap:16px;
+    }
+    
+    .stat{ 
+      flex:1; 
+      min-width:100px; 
+      background:rgba(255,255,255,.08);
+      border-radius:12px; 
+      padding:16px; 
+      text-align:center;
+      transition: transform .2s ease, background .3s ease;
+    }
+    
+    .stat:hover {
+      transform: translateY(-3px);
+      background: rgba(255,255,255,.12);
+    }
+    
+    .stat strong{ 
+      display:block; 
+      font-size:20px; 
+      margin-bottom:6px;
+      background: linear-gradient(90deg, var(--purple), var(--green));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .btn{ 
+      --radius:999px; 
+      display:inline-block;
+      padding:12px 18px; 
+      border-radius:var(--radius);
+      font-weight:800; 
+      text-align:center; 
+      text-decoration:none;
+      border:1px solid transparent; 
+      cursor:pointer;
+      transition:all .3s ease; 
+      margin:6px 0; 
+      width:100%;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .btn:hover::before {
+      left: 100%;
+    }
+    
+    .btn-primary{ 
+      background:linear-gradient(180deg,#ffffff,var(--btn-blue));
+      color:#0b3b8d; 
+      border-color:var(--btn-blue-border);
+      box-shadow: 0 6px 16px rgba(13,59,141,.25);
+    }
+    
+    .btn-primary:hover{ 
+      filter:brightness(1.05);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(13,59,141,.4);
+    }
+    
+    .btn-ghost{ 
+      background:transparent; 
+      color:#fff; 
+      border:1px solid rgba(255,255,255,.4);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-ghost:hover{ 
+      background:rgba(255,255,255,.1);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(255,255,255,.1);
+    }
+    
+    .btn-small {
+      padding: 8px 16px;
+      font-size: 14px;
+      width: auto;
+    }
+
+    footer{ 
+      margin-top:40px; 
+      text-align:center; 
+      color:var(--muted); 
+      font-size:14px;
+      opacity: 0;
+      animation: fadeIn 0.6s ease-out 1.6s forwards;
+    }
+    
+    /* Crypto Animation */
+    .crypto-animation {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    .coin {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple), var(--green));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      opacity: 0.6;
+      animation: coinFloat 10s ease-in-out infinite;
+    }
+    
+    .coin:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
+    .coin:nth-child(2) { top: 20%; left: 90%; animation-delay: 1s; }
+    .coin:nth-child(3) { top: 60%; left: 8%; animation-delay: 2s; }
+    .coin:nth-child(4) { top: 80%; left: 85%; animation-delay: 3s; }
+    .coin:nth-child(5) { top: 40%; left: 92%; animation-delay: 4s; }
+    .coin:nth-child(6) { top: 30%; left: 3%; animation-delay: 5s; }
+    .coin:nth-child(7) { top: 85%; left: 50%; animation-delay: 6s; }
+    .coin:nth-child(8) { top: 15%; left: 70%; animation-delay: 7s; }
+
+    /* Sparkle Effect */
+    .sparkle{ 
+      position:absolute; 
+      inset:0; 
+      pointer-events:none; 
+      opacity:.3; 
+      mix-blend-mode:screen;
+      z-index: -1;
+    }
+    
+    .sparkle i{ 
+      position:absolute; 
+      width:2px; 
+      height:2px; 
+      background:#fff; 
+      border-radius:50%; 
+      filter:blur(.5px);
+      animation: sparkleTwinkle 4s ease-in-out infinite;
+    }
+    
+    .sparkle i:nth-child(1) { top: 15%; left: 25%; animation-delay: 0s; }
+    .sparkle i:nth-child(2) { top: 65%; left: 85%; animation-delay: 0.5s; }
+    .sparkle i:nth-child(3) { top: 80%; left: 35%; animation-delay: 1s; }
+    .sparkle i:nth-child(4) { top: 45%; left: 65%; animation-delay: 1.5s; }
+    .sparkle i:nth-child(5) { top: 75%; left: 15%; animation-delay: 2s; }
+    .sparkle i:nth-child(6) { top: 35%; left: 95%; animation-delay: 2.5s; }
+    .sparkle i:nth-child(7) { top: 10%; left: 55%; animation-delay: 3s; }
+    .sparkle i:nth-child(8) { top: 90%; left: 75%; animation-delay: 3.5s; }
+
+    /* Animations */
+    @keyframes cardEntrance {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes fadeInDown {
+      0% { opacity: 0; transform: translateY(-20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-20px) scale(1.05); }
+    }
+    
+    @keyframes logoPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    @keyframes textGlow {
+      0% { text-shadow: 0 0 5px rgba(255,255,255,0.5); }
+      100% { text-shadow: 0 0 15px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.6); }
+    }
+    
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    @keyframes coinFloat {
+      0%, 100% { 
+        transform: translateY(0) rotate(0deg) scale(1); 
+        opacity: 0.4; 
+      }
+      25% { 
+        transform: translateY(-20px) rotate(90deg) scale(1.1); 
+        opacity: 0.7; 
+      }
+      50% { 
+        transform: translateY(-40px) rotate(180deg) scale(1.2); 
+        opacity: 1; 
+      }
+      75% { 
+        transform: translateY(-20px) rotate(270deg) scale(1.1); 
+        opacity: 0.7; 
+      }
+    }
+    
+    @keyframes sparkleTwinkle { 
+      0%, 100% { opacity: 0.1; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+    
+    /* Dashboard specific styles */
+    .profile-info p {
+      margin: 8px 0;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 8px;
+    }
+    
+    .profile-info strong {
+      color: var(--muted);
+    }
+    
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    
+    .referral-rewards {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 12px;
+    }
+    
+    .referral-rewards li {
+      margin: 8px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+    
+    .referral-rewards li::before {
+      content: '💰';
+      position: absolute;
+      left: 0;
+    }
+    
+    .copy-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-left: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .copy-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+    
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(90deg, var(--purple), var(--green));
+      color: white;
+      padding: 12px 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      font-weight: 600;
+      transform: translateX(100%);
+      transition: transform 0.5s ease;
+      z-index: 1000;
+    }
+    
+    .notification.show {
+      transform: translateX(0);
+    }
+  </style>
+</head>
+<body>
+<!-- Language selector (fixed top-right) -->
+<div id="mt_lang_selector_container" style="position:fixed;top:12px;right:12px;z-index:9999;font-family:Inter,system-ui,Segoe UI,Roboto;">
+  <label style="display:inline-flex;align-items:center;gap:8px;font-weight:700;color:#cbd5e1;background:rgba(0,0,0,0.25);padding:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(4px);">
+    <span>🌐</span>
+    <select id="mt_lang_select" style="background:transparent;color:#fff;padding:6px;border-radius:6px;border:0;">
+      <option value="en">EN</option><option value="hi">HI</option><option value="ur">UR</option>
+      <option value="ar">AR</option><option value="zh">ZH</option><option value="ja">JA</option>
+      <option value="ko">KO</option><option value="ru">RU</option><option value="de">DE</option>
+      <option value="es">ES</option><option value="fr">FR</option><option value="tr">TR</option>
+      <option value="pt">PT</option><option value="id">ID</option>
+    </select>
+  </label>
+</div>
+
+<!-- MONEYTALKS Loader -->
+<style id="mt_loader_style">
+#mt_loader_overlay{position:fixed;inset:0;background:linear-gradient(120deg,#071026,#051f1b);display:flex;align-items:center;justify-content:center;z-index:100000;color:#fff}
+#mt_loader_box{display:flex;flex-direction:column;align-items:center;gap:12px}
+#mt_loader_logo{font-weight:900;font-size:34px;letter-spacing:4px;color:#ffd86b;text-shadow:0 4px 30px rgba(255,220,107,0.12);opacity:0;transform:translateY(6px);transition:all 600ms ease}
+#mt_loader_sub{color:#cbd5e1;opacity:0;transform:translateY(6px);transition:all 600ms ease 200ms;font-size:14px}
+.mt_loader_show #mt_loader_logo, .mt_loader_show #mt_loader_sub{opacity:1;transform:translateY(0)}
+</style>
+<div id="mt_loader_overlay"><div id="mt_loader_box"><div id="mt_loader_logo">MONEYTALKS</div><div id="mt_loader_sub">Welcome — preparing your experience</div></div></div>
+<script>
+(function(){
+  try{
+    document.documentElement.classList.add('mt_loader_show');
+    window.addEventListener('load', function(){ setTimeout(hideLoader, 800); });
+    function hideLoader(){
+      var el = document.getElementById('mt_loader_overlay');
+      if(!el) return;
+      el.style.transition = 'opacity 420ms ease';
+      el.style.opacity = '0';
+      setTimeout(function(){ el.parentNode && el.parentNode.removeChild(el); }, 600);
+    }
+    setTimeout(hideLoader, 3000);
+  }catch(e){}
+})();
+</script>
+<!-- end loader -->
+
+  <!-- Animated Background -->
+  <div class="bg-animation">
+    <div class="bg-element bg-1"></div>
+    <div class="bg-element bg-2"></div>
+  </div>
+  
+  <!-- Crypto Animation -->
+  <div class="crypto-animation">
+    <div class="coin">₿</div>
+    <div class="coin">Ξ</div>
+    <div class="coin">$</div>
+    <div class="coin">€</div>
+    <div class="coin">£</div>
+    <div class="coin">¥</div>
+    <div class="coin">₿</div>
+    <div class="coin">Ξ</div>
+  </div>
+  
+  <!-- Sparkle Effect -->
+  <div class="sparkle" aria-hidden="true">
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i>
+  </div>
+
+  <div class="container">
+    <!-- Logo + Welcome -->
+    <div class="logo">
+      <div class="logo-mark"><span>MT</span></div>
+      <div class="logo-text">MoneyTalks</div>
+    </div>
+    
+    <h1>Welcome back, <span id="username">User</span> 👋</h1>
+
+    <!-- Simplified Stats Row -->
+    <div class="grid grid-3" style="margin-bottom: 24px;">
+      <div class="card">
+        <h2>💰 Balance</h2>
+        <div style="font-size: 28px; font-weight: 800; margin: 10px 0; background: linear-gradient(90deg, var(--purple), var(--green)); -webkit-background-clip: text; background-clip: text; color: transparent;">
+          $<span data-mt-balance>0.00</span>
+        </div>
+        <small style="color: var(--muted);">Active Plan: <span data-mt-plan>None</span> (<span data-mt-mult>x1</span>)</small>
+        <div style="margin-top: 15px; display: flex; gap: 10px;">
+          <button id="mt_sim_earn" class="btn btn-primary btn-small">Quick Earn +$0.50</button>
+          <button id="mt_add_funds" class="btn btn-ghost btn-small">Add $1.00</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🔥 Login Streak</h2>
+        <div class="streak-days" style="display: flex; justify-content: space-between; margin: 15px 0;">
+          <span class="day active" style="background: var(--green); color: black; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: bold;">M</span>
+          <span class="day active" style="background: var(--green); color: black; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: bold;">T</span>
+          <span class="day active" style="background: var(--green); color: black; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: bold;">W</span>
+          <span class="day" style="background: rgba(255,255,255,0.1); color: var(--muted); width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">T</span>
+          <span class="day" style="background: rgba(255,255,255,0.1); color: var(--muted); width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">F</span>
+          <span class="day" style="background: rgba(255,255,255,0.1); color: var(--muted); width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">S</span>
+          <span class="day" style="background: rgba(255,255,255,0.1); color: var(--muted); width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">S</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📊 Stats</h2>
+        <div class="stat-row">
+          <div class="stat">
+            <strong id="sites">0</strong>
+            Free Sites
+          </div>
+          <div class="stat">
+            <strong id="referrals">0</strong>
+            Referrals
+          </div>
+          <div class="stat">
+            <strong id="spins">0</strong>
+            Free Spins
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="grid grid-2">
+      <!-- Profile Card -->
+      <div class="card">
+        <h2>👤 Profile</h2>
+        <div class="profile-info">
+          <p><strong>Username:</strong> <span id="p-username">User123</span></p>
+          <p><strong>Email:</strong> <span id="p-email">user@email.com</span></p>
+          <p><strong>Plan:</strong> <span id="p-plan">Free</span></p>
+          <p><strong>Status:</strong> <span id="p-status">Unpaid</span></p>
+          <p><strong>Joined:</strong> <span id="p-joined">Today</span></p>
+          <a href="plan.html" class="btn btn-primary" style="margin-top: 16px; width: 100%;">Upgrade Plan</a>
+        </div>
+      </div>
+
+      <!-- Earning Sites Card -->
+      <div class="card">
+        <h2>🚀 Earning Sites</h2>
+        <p id="no-plan">No plan purchased yet. <a href="plan.html">Buy a plan</a> to unlock earning sites!</p>
+        <div id="plan-links" style="display:none" class="links-grid">
+          <!-- Example placeholders -->
+          <a class="btn btn-primary" href="#" target="_blank">Site 1</a>
+          <a class="btn btn-primary" href="#" target="_blank">Site 2</a>
+          <a class="btn btn-primary" href="#" target="_blank">Site 3</a>
+          <a class="btn btn-primary" href="#" target="_blank">Site 4</a>
+          <!-- More buttons will appear based on plan -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Referral -->
+    <div class="card">
+      <h2>👥 Referral System</h2>
+      <p><strong>Your referral link:</strong></p>
+      <div style="display: flex; margin-bottom: 16px;">
+        <input type="text" id="ref-link" value="https://moneytalks.com/ref/USER123" readonly style="flex: 1; padding: 10px; border-radius: 8px 0 0 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: white;">
+        <button class="copy-btn" id="copy-ref">Copy</button>
+      </div>
+      <p><strong>Referral Rewards:</strong></p>
+      <ul class="referral-rewards">
+        <li>8 referrals → 1 free site</li>
+        <li>15 referrals → 2 free sites</li>
+        <li>20 referrals → 5 free sites + 1 free spin</li>
+        <li>30 referrals → 10 free sites + 2 free spins</li>
+      </ul>
+    </div>
+
+    <!-- Game -->
+    <div class="card">
+      <h2>🎰 Roulette Game</h2>
+      <p>Try your luck and win extra crypto links.</p>
+      <div class="grid grid-3" style="margin-top: 16px;">
+        <div class="stat">
+          <strong>0</strong>
+          Spins Left
+        </div>
+        <div class="stat">
+          <strong>0</strong>
+          Games Won
+        </div>
+        <div class="stat">
+          <strong>$0</strong>
+          Total Won
+        </div>
+      </div>
+      <a class="btn btn-primary" href="game.html" style="margin-top: 16px;">Play Now</a>
+    </div>
+
+    <footer>
+      © <span id="y"></span> MoneyTalks. All rights reserved.
+    </footer>
+  </div>
+  
+  <!-- Notification (hidden by default) -->
+  <div class="notification" id="notification">
+    Copied to clipboard!
+  </div>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+    
+    // Copy referral link functionality
+    document.getElementById('copy-ref').addEventListener('click', function() {
+      const refLink = document.getElementById('ref-link');
+      refLink.select();
+      refLink.setSelectionRange(0, 99999); // For mobile devices
+      
+      navigator.clipboard.writeText(refLink.value).then(() => {
+        const notification = document.getElementById('notification');
+        notification.textContent = 'Referral link copied to clipboard!';
+        notification.classList.add('show');
+        
+        setTimeout(() => {
+          notification.classList.remove('show');
+        }, 3000);
+      });
+    });
+    
+    // Simulate user data loading
+    setTimeout(() => {
+      // In a real app, this would come from an API
+      document.getElementById('username').textContent = 'CryptoMaster';
+      document.getElementById('p-username').textContent = 'CryptoMaster';
+      document.getElementById('p-email').textContent = 'crypto@moneytalks.com';
+      document.getElementById('p-plan').textContent = 'Premium';
+      document.getElementById('p-status').textContent = 'Active';
+      document.getElementById('sites').textContent = '8';
+      document.getElementById('referrals').textContent = '5';
+      document.getElementById('spins').textContent = '2';
+      
+      // Show plan links
+      document.getElementById('no-plan').style.display = 'none';
+      document.getElementById('plan-links').style.display = 'grid';
+    }, 1000);
+    
+    // Quick earn button
+    document.getElementById('mt_sim_earn').addEventListener('click', function() {
+      const plan = JSON.parse(localStorage.getItem('mt_activePlan') || 'null');
+      const baseEarn = 0.5;
+      const mult = plan ? (plan.mult || 1) : 1;
+      const earned = baseEarn * mult;
+      
+      // Update balance
+      const currentBalance = parseFloat(document.querySelector('[data-mt-balance]').textContent.replace('$', ''));
+      const newBalance = currentBalance + earned;
+      document.querySelector('[data-mt-balance]').textContent = '$' + newBalance.toFixed(2);
+      
+      // Show notification
+      const notification = document.getElementById('notification');
+      notification.textContent = `+$${earned.toFixed(2)} earned!`;
+      notification.classList.add('show');
+      setTimeout(() => notification.classList.remove('show'), 2000);
+    });
+    
+    // Add funds button
+    document.getElementById('mt_add_funds').addEventListener('click', function() {
+      const currentBalance = parseFloat(document.querySelector('[data-mt-balance]').textContent.replace('$', ''));
+      const newBalance = currentBalance + 1.0;
+      document.querySelector('[data-mt-balance]').textContent = '$' + newBalance.toFixed(2);
+      
+      const notification = document.getElementById('notification');
+      notification.textContent = '+$1.00 added to balance!';
+      notification.classList.add('show');
+      setTimeout(() => notification.classList.remove('show'), 2000);
+    });
+  </script>
+
+<!-- BEGIN: MoneyTalks - Frontend Balance, Plans & Referral System -->
+<script>
+(function(){
+  // Helpers
+  function getLS(key, def){ try{ return JSON.parse(localStorage.getItem(key)); }catch(e){return def;} }
+  function setLS(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+  function getBalance(){ return Number(getLS('mt_balance', 0)); }
+  function setBalance(v){ setLS('mt_balance', Number(v)); updateBalanceDisplays(); }
+  function updateBalanceDisplays(){
+    const els = document.querySelectorAll('[data-mt-balance]');
+    els.forEach(el => el.textContent = '$' + Number(getBalance()).toFixed(2));
+  }
+  function getActivePlan(){ return getLS('mt_activePlan', null); }
+  function setActivePlan(plan){ setLS('mt_activePlan', plan); updatePlanDisplays(); }
+  function getRefCode(){ return localStorage.getItem('mt_refCode') || null; }
+  function ensureRefCode(){
+    if(!getRefCode()){
+      // create a short random code
+      const code = 'MT' + Math.random().toString(36).slice(2,9).toUpperCase();
+      localStorage.setItem('mt_refCode', code);
+    }
+    return getRefCode();
+  }
+  function getReferrals(){ return Number(getLS('mt_referrals', 0)); }
+  function addReferral(){ setLS('mt_referrals', getReferrals()+1); updateReferralDisplays(); }
+  function updateReferralDisplays(){
+    const code = getRefCode();
+    const els = document.querySelectorAll('[data-mt-ref-link]');
+    els.forEach(el => el.textContent = location.origin + location.pathname.replace(/\/[^\/]*$/,'/') + 'auth.html?ref=' + code);
+    const countEls = document.querySelectorAll('[data-mt-ref-count]');
+    countEls.forEach(el => el.textContent = getReferrals());
+  }
+  function updatePlanDisplays(){
+    const plan = getActivePlan();
+    const els = document.querySelectorAll('[data-mt-plan]');
+    els.forEach(el => el.textContent = plan ? plan.name : 'None');
+    // show multiplier indicator
+    const multEls = document.querySelectorAll('[data-mt-mult]');
+    const mult = plan ? plan.mult : 1;
+    multEls.forEach(el => el.textContent = 'x' + mult.toFixed(2));
+  }
+
+  // Initialize defaults if missing
+  if(localStorage.getItem('mt_balance') === null){
+    setLS('mt_balance', 5); // default starter balance $5
+  }
+  ensureRefCode();
+  // If auth.html visited with ?ref=CODE then register referral for that code (simple demo)
+  try{
+    const url = new URL(location.href);
+    const ref = url.searchParams.get('ref');
+    if(ref){
+      // mark that this browser used a referral (so registration can credit)
+      localStorage.setItem('mt_usedReferral', ref);
+    }
+  }catch(e){}
+
+  // Public API exposed for page scripts
+  window.MT = {
+    getBalance: getBalance,
+    setBalance: setBalance,
+    addBalance: function(amount){
+      setBalance(getBalance() + Number(amount));
+      return getBalance();
+    },
+    spend: function(amount){
+      const b = getBalance();
+      if(b < amount) return false;
+      setBalance(b - Number(amount));
+      return true;
+    },
+    getActivePlan: getActivePlan,
+    setActivePlan: setActivePlan,
+    getRefCode: getRefCode,
+    addReferral: addReferral
+  };
+
+  // Update UI on load
+  window.addEventListener('load', function(){
+    updateBalanceDisplays();
+    updatePlanDisplays();
+    updateReferralDisplays();
+  });
+
+})(); // end IIFE
+</script>
+<!-- END: MoneyTalks -->
+
+<div style="position:fixed; top:18px; right:18px;">
+  <a href="#" class="btn btn-ghost" id="mt_logout_btn">🚪 Logout</a>
+</div>
+<script>
+document.getElementById('mt_logout_btn')?.addEventListener('click', function(e){
+  e.preventDefault();
+  localStorage.removeItem('userLoggedIn');
+  window.location.href = 'login and registration.html';
+});
+</script>
+
+<footer style="margin-top:40px;padding:18px 12px;text-align:center;color:#9fb0dd;border-top:1px solid rgba(255,255,255,0.03);">
+  <div style="max-width:1000px;margin:0 auto;">
+    <div style="margin-bottom:6px;">© MONEYTALKS • Contact: <a href="mailto:themoneytalks.web@gmail.com" style="color:#9fb0dd;text-decoration:none;">themoneytalks.web@gmail.com</a></div>
+    <div style="display:flex;gap:12px;justify-content:center;font-size:14px;">
+      <a href="about.html" style="color:#9fb0dd;text-decoration:none;">About</a>
+      <a href="policy.html" style="color:#9fb0dd;text-decoration:none;">Policy</a>
+      <a href="faq.html" style="color:#9fb0dd;text-decoration:none;">FAQ</a>
+    </div>
+  </div>
+</footer>
+<script src="lang/translate.local.js"></script>
+
+<div style="padding:12px;"><button id="mt_invite_btn" data-i18n="btn_invite" style="padding:10px 14px;border-radius:999px;background:linear-gradient(90deg,#ffd86b,#ff8ba3);border:none;cursor:pointer;font-weight:700;">Invite & Earn</button></div>
+
+
+<script>
+(function(){
+  var btn = document.getElementById('mt_invite_btn'); if(!btn) return;
+  btn.addEventListener('click', function(){
+    var ref = 'MT' + Math.random().toString(36).substr(2,6).toUpperCase();
+    var link = 'login and registration.html?ref=' + ref;
+    navigator.clipboard && navigator.clipboard.writeText(link).then(function(){ alert((window.MTTranslate && window.MTTranslate.t && window.MTTranslate.t('share_copied')) || 'Referral link copied: ' + link); }, function(){ prompt('Copy this link:', link); });
+    if(navigator.share){ navigator.share({ title: 'Join MONEYTALKS', text: 'Join with my link', url: link }).catch(()=>{}); }
+  });
+})();
+</script>
+
+<!-- GLOBAL ENHANCEMENTS SCRIPT -->
+<script>
+// Global Enhancements for MoneyTalks
+function checkFirstVisit() { if (!localStorage.getItem('first_visit')) { setTimeout(() => { showNotification('👋 Welcome to MoneyTalks!', 'info'); localStorage.setItem('first_visit', 'true'); }, 2000); } }
+function showPeriodicNotifications() { const n = ["💡 Complete daily goals!","🎰 Try the casino game!","👥 Invite friends!","📈 Upgrade your plan!"]; setInterval(() => { showNotification(n[Math.floor(Math.random()*n.length)], 'info'); }, 300000); }
+function showNotification(m,t='info') { const s={success:{bg:'#00E676',icon:'✅'},error:{bg:'#ff4757',icon:'❌'},warning:{bg:'#ffa502',icon:'⚠️'},info:{bg:'#8E2DE2',icon:'💡'}}[t]||{bg:'#8E2DE2',icon:'💡'}; document.querySelectorAll('.global-notification').forEach(e=>e.remove()); const n=document.createElement('div'); n.className='global-notification'; n.style.cssText=`position:fixed;top:20px;right:20px;background:${s.bg};color:white;padding:12px 20px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.3);z-index:10000;animation:slideIn 0.3s ease;display:flex;align-items:center;gap:10px;max-width:350px;font-family:Inter,sans-serif;`; n.innerHTML=`${s.icon} ${m}`; document.body.appendChild(n); setTimeout(()=>{n.style.animation='slideOut 0.3s ease';setTimeout(()=>n.remove(),300);},3000);}
+function initThemeToggle() { if(document.querySelector('.theme-toggle'))return; const t=localStorage.getItem('moneytalks_theme')||'dark'; applyTheme(t); const l=document.getElementById('mt_lang_selector_container'); if(l){ const b=document.createElement('div'); b.className='theme-toggle'; b.style.cssText=`display:inline-flex;align-items:center;gap:8px;font-weight:700;color:#cbd5e1;background:rgba(0,0,0,0.25);padding:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(4px);margin-left:8px;cursor:pointer;`; b.innerHTML=t=='dark'?'🌙':'☀️'; b.title='Toggle theme'; b.addEventListener('click',function(){ const c=localStorage.getItem('moneytalks_theme')||'dark'; const n=c=='dark'?'light':'dark'; localStorage.setItem('moneytalks_theme',n); applyTheme(n); this.innerHTML=n=='dark'?'🌙':'☀️'; showNotification(`${n} theme`,'info');}); l.parentNode.insertBefore(b,l.nextSibling);}}
+function applyTheme(t){ if(t=='light'){ document.documentElement.style.setProperty('--bg-dark','#f8fafc'); document.documentElement.style.setProperty('--bg-mid','#e2e8f0'); document.documentElement.style.setProperty('--text','#1e293b'); document.documentElement.style.setProperty('--muted','#64748b'); } else { document.documentElement.style.setProperty('--bg-dark','#0d0221'); document.documentElement.style.setProperty('--bg-mid','#0a0f2c'); document.documentElement.style.setProperty('--text','#ffffff'); document.documentElement.style.setProperty('--muted','#cbd5e1'); }}
+function initCopyFunctionality(){ document.addEventListener('click',function(e){ if(e.target.classList.contains('copy-btn')||e.target.closest('.copy-btn')){ const i=document.querySelector('input[readonly]')||e.target.previousElementSibling; if(i){ i.select(); navigator.clipboard.writeText(i.value).then(()=>{ showNotification('Copied!','success'); }); }}});}
+document.addEventListener('DOMContentLoaded',function(){ checkFirstVisit(); initThemeToggle(); initCopyFunctionality(); setTimeout(()=>showPeriodicNotifications(),10000); setTimeout(()=>{ document.querySelectorAll('.btn-primary').forEach(el=>{ el.classList.add('pulse'); setTimeout(()=>el.classList.remove('pulse'),6000);});},3000);});
+</script>
+
+</body>
+</html>

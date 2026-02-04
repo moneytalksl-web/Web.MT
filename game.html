@@ -1,0 +1,1417 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>MoneyTalks Game Arena Roulette</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <script src="https://www.paypal.com/sdk/js?client-id=AXMTfOoz5WNRdOjT2blrlrxEZd7OPtKWAFDC_IdSfwD5OmkqoP2eyJrshBStJhkOHdh6ShcRWt5Xz8ow&currency=USD"></script>
+  
+  <!-- GLOBAL CSS -->
+  <style>
+    /* shared.css - Global styles */
+    .btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; position: relative; overflow: hidden; }
+    .btn:active { transform: translateY(2px) !important; }
+    .card { transition: transform 0.3s ease, box-shadow 0.3s ease !important; }
+    .card:hover { transform: translateY(-5px) !important; box-shadow: 0 20px 40px rgba(0,0,0,0.3) !important; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #8E2DE2, #00E676); border-radius: 4px; }
+    ::selection { background: rgba(142, 45, 226, 0.3); color: white; }
+    :focus { outline: 2px solid #8E2DE2; outline-offset: 2px; }
+    .loading-spinner { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1); border-top-color: #8E2DE2; border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .gradient-text { background: linear-gradient(90deg, #8E2DE2, #00E676); -webkit-background-clip: text; background-clip: text; color: transparent; display: inline-block; }
+    .pulse { animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+    .fade-in { animation: fadeIn 0.5s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) { .hide-mobile { display: none !important; } .mobile-stack { flex-direction: column !important; } .mobile-center { text-align: center !important; } }
+    @media print { .no-print { display: none !important; } }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+    [data-tooltip] { position: relative; }
+    [data-tooltip]:hover::after { content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; white-space: nowrap; z-index: 1000; pointer-events: none; }
+    
+    /* Age Verification Styles */
+    #age-verify { 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      background: rgba(0,0,0,0.98); 
+      z-index: 100000; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      backdrop-filter: blur(20px);
+      animation: fadeIn 0.5s ease;
+    }
+    
+    .age-modal {
+      background: rgba(13,2,33,0.97);
+      padding: clamp(25px, 5vw, 40px);
+      border-radius: 20px;
+      max-width: min(90vw, 500px);
+      text-align: center;
+      border: 2px solid #8E2DE2;
+      box-shadow: 0 25px 70px rgba(0,0,0,0.9);
+      animation: cardEntrance 0.8s ease-out;
+    }
+    
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; visibility: hidden; }
+    }
+    
+    /* Footer Styles */
+    .footer-links {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      font-size: 14px;
+      margin: 20px 0 15px 0;
+      flex-wrap: wrap;
+      padding: 0 15px;
+    }
+    
+    .footer-links a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      font-size: clamp(12px, 3vw, 14px);
+      white-space: nowrap;
+    }
+    
+    .footer-links a:hover {
+      color: #00E676;
+      background: rgba(0,230,118,0.1);
+      text-decoration: none;
+    }
+    
+    .footer-links a:active {
+      transform: translateY(1px);
+    }
+    
+    @media (max-width: 480px) {
+      .footer-links {
+        gap: 8px;
+      }
+      
+      .footer-links a {
+        padding: 5px 10px;
+        font-size: 12px;
+      }
+    }
+  </style>
+  
+  <style>
+    :root {
+      --purple: #8E2DE2;
+      --green: #00E676;
+      --text: #ffffff;
+      --muted: #cbd5e1;
+      --btn-blue: #eaf2ff;
+      --btn-blue-border: #c7dbff;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      background: 
+        radial-gradient(1200px 600px at 80% -10%, rgba(142,45,226,.28), transparent 60%),
+        radial-gradient(1000px 600px at -10% 90%, rgba(0,230,118,.25), transparent 60%),
+        linear-gradient(120deg, #0d0221 0%, #0a0f2c 35%, #051f1b 100%);
+      color: var(--text);
+      font-family: Inter, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 15px;
+      position: relative;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Responsive Container */
+    .container {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Animated Background Elements */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      pointer-events: none;
+    }
+    
+    .bg-element {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.15;
+    }
+    
+    .bg-1 {
+      width: min(400px, 80vw);
+      height: min(400px, 80vw);
+      background: var(--purple);
+      top: -150px;
+      right: -100px;
+      animation: float 15s ease-in-out infinite;
+    }
+    
+    .bg-2 {
+      width: min(500px, 90vw);
+      height: min(500px, 90vw);
+      background: var(--green);
+      bottom: -200px;
+      left: -150px;
+      animation: float 18s ease-in-out infinite reverse;
+    }
+    
+    .game-card {
+      background: rgba(255,255,255,.05);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 20px;
+      padding: clamp(15px, 4vw, 25px);
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 12px 28px rgba(0,0,0,.3);
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+      animation: cardEntrance 0.8s ease-out 0.3s forwards;
+    }
+    
+    h1 { 
+      font-size: clamp(22px, 5vw, 26px); 
+      margin-bottom: 12px; 
+      color: #ffd43b;
+      text-shadow: 0 0 10px rgba(255,212,59,0.5);
+      line-height: 1.2;
+    }
+    
+    h2 {
+      font-size: clamp(20px, 4vw, 24px);
+      margin-bottom: 15px;
+      color: #ffd43b;
+    }
+    
+    .credits-box {
+      background: rgba(17,24,39,0.7);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 15px;
+      font-weight: 700; 
+      font-size: clamp(16px, 4vw, 18px);
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    #add-funds-btn {
+      background: linear-gradient(90deg, var(--purple), var(--green));
+      color: #fff; 
+      border: none;
+      padding: clamp(10px, 3vw, 12px) clamp(15px, 4vw, 20px); 
+      border-radius: 10px;
+      font-weight: 700; 
+      cursor: pointer; 
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+      width: 100%;
+      font-size: clamp(14px, 3.5vw, 16px);
+    }
+    
+    #add-funds-btn:active {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(142,45,226,0.4);
+    }
+    
+    @media (hover: hover) {
+      #add-funds-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(142,45,226,0.4);
+      }
+    }
+    
+    .wheel-container { 
+      position: relative; 
+      display: inline-block; 
+      margin: 15px 0;
+      width: 100%;
+      max-width: 300px;
+    }
+    
+    #wheel {
+      display: block;
+      background: #222;
+      border-radius: 50%;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+      border: 3px solid rgba(255,255,255,0.1);
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1/1;
+    }
+    
+    .pointer {
+      position: absolute;
+      top: -8px; 
+      left: 50%;
+      transform: translateX(-50%) rotate(180deg);
+      width: 0; 
+      height: 0;
+      border-left: clamp(14px, 4vw, 18px) solid transparent;
+      border-right: clamp(14px, 4vw, 18px) solid transparent;
+      border-top: clamp(24px, 6vw, 30px) solid yellow;
+      filter: drop-shadow(0 0 4px rgba(0,0,0,0.6));
+      z-index: 10;
+    }
+    
+    .glow {
+      animation: glowEffect 1s ease-in-out 3;
+    }
+    
+    @keyframes glowEffect {
+      0%   { filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 8px yellow); }
+      50%  { filter: drop-shadow(0 0 10px #fff) drop-shadow(0 0 20px orange); }
+      100% { filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 8px yellow); }
+    }
+    
+    .spin-btn {
+      margin-top: 15px; 
+      padding: clamp(12px, 3vw, 14px) clamp(15px, 4vw, 20px);
+      border: none; 
+      border-radius: 10px;
+      font-weight: 700; 
+      font-size: clamp(14px, 3.5vw, 16px);
+      cursor: pointer;
+      background: #e63946; 
+      color: #fff;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+    
+    .spin-btn:active:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(230,57,70,0.4);
+    }
+    
+    @media (hover: hover) {
+      .spin-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(230,57,70,0.4);
+      }
+    }
+    
+    .spin-btn:disabled { 
+      background: #555; 
+      cursor: not-allowed; 
+    }
+    
+    #result { 
+      margin: 15px 0; 
+      min-height: 24px; 
+      font-weight: 600;
+      font-size: clamp(14px, 3.5vw, 16px);
+      line-height: 1.4;
+      word-break: break-word;
+    }
+    
+    .crypto-links button {
+      display: block; 
+      margin: 8px auto;
+      padding: clamp(8px, 2.5vw, 10px) clamp(12px, 3vw, 15px);
+      border-radius: 999px; 
+      border: none;
+      background: var(--green); 
+      color: #000;
+      font-weight: 700; 
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 90%;
+      max-width: 250px;
+      font-size: clamp(13px, 3vw, 15px);
+    }
+    
+    .crypto-links button:active {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0,230,118,0.4);
+    }
+    
+    @media (hover: hover) {
+      .crypto-links button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0,230,118,0.4);
+      }
+    }
+    
+    #paypal-options { 
+      margin-bottom: 15px; 
+      display: none; 
+    }
+    
+    .history {
+      margin-top: 15px; 
+      text-align: left; 
+      font-size: clamp(12px, 3vw, 14px);
+      background: rgba(17,24,39,0.7); 
+      padding: 12px; 
+      border-radius: 10px;
+      max-height: 150px; 
+      overflow-y: auto;
+      border: 1px solid rgba(255,255,255,0.1);
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Game Instructions Section */
+    .instructions {
+      background: rgba(0,0,0,0.2);
+      border-radius: 12px;
+      padding: 15px;
+      margin: 15px 0;
+      border-left: 4px solid var(--green);
+    }
+    
+    .instructions h3 {
+      margin: 0 0 10px 0;
+      font-size: clamp(16px, 4vw, 18px);
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .instructions h3::before {
+      content: "🎮";
+    }
+    
+    .instructions ul {
+      margin: 0;
+      padding-left: 20px;
+      text-align: left;
+    }
+    
+    .instructions li {
+      margin-bottom: 6px;
+      line-height: 1.4;
+      font-size: clamp(13px, 3vw, 14px);
+    }
+    
+    .instructions .highlight {
+      color: var(--green);
+      font-weight: 600;
+    }
+    
+    .instructions .note {
+      font-size: clamp(11px, 2.5vw, 12px);
+      color: var(--muted);
+      margin-top: 8px;
+      font-style: italic;
+    }
+    
+    /* Crypto Animation */
+    .crypto-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    .coin {
+      position: absolute;
+      width: clamp(20px, 5vw, 24px);
+      height: clamp(20px, 5vw, 24px);
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple), var(--green));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: clamp(8px, 2vw, 10px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      opacity: 0.7;
+      animation: coinFloat 8s ease-in-out infinite;
+    }
+    
+    .coin:nth-child(1) { top: 15%; left: 8%; animation-delay: 0s; }
+    .coin:nth-child(2) { top: 25%; left: 82%; animation-delay: 1s; }
+    .coin:nth-child(3) { top: 65%; left: 12%; animation-delay: 2s; }
+    .coin:nth-child(4) { top: 75%; left: 78%; animation-delay: 3s; }
+    .coin:nth-child(5) { top: 45%; left: 88%; animation-delay: 4s; }
+    .coin:nth-child(6) { top: 35%; left: 5%; animation-delay: 5s; }
+    .coin:nth-child(7) { top: 85%; left: 45%; animation-delay: 6s; }
+    .coin:nth-child(8) { top: 10%; left: 65%; animation-delay: 7s; }
+
+    /* Sparkle Effect */
+    .sparkle { 
+      position: fixed; 
+      inset: 0; 
+      pointer-events: none; 
+      opacity: .4; 
+      mix-blend-mode: screen;
+      z-index: -1;
+    }
+    
+    .sparkle i { 
+      position: absolute; 
+      width: 3px; 
+      height: 3px; 
+      background: #fff; 
+      border-radius: 50%; 
+      filter: blur(.5px);
+      animation: sparkleTwinkle 3s ease-in-out infinite;
+    }
+    
+    .sparkle i:nth-child(1) { top: 20%; left: 20%; animation-delay: 0s; }
+    .sparkle i:nth-child(2) { top: 60%; left: 80%; animation-delay: 0.5s; }
+    .sparkle i:nth-child(3) { top: 80%; left: 30%; animation-delay: 1s; }
+    .sparkle i:nth-child(4) { top: 40%; left: 60%; animation-delay: 1.5s; }
+    .sparkle i:nth-child(5) { top: 70%; left: 10%; animation-delay: 2s; }
+    .sparkle i:nth-child(6) { top: 30%; left: 90%; animation-delay: 2.5s; }
+    .sparkle i:nth-child(7) { top: 10%; left: 50%; animation-delay: 3s; }
+    .sparkle i:nth-child(8) { top: 90%; left: 70%; animation-delay: 3.5s; }
+
+    /* Toggle Switch */
+    .sound-control {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 10px 0;
+      padding: 8px 0;
+    }
+    
+    .sound-label {
+      color: var(--muted);
+      font-size: clamp(14px, 3.5vw, 16px);
+    }
+    
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: clamp(45px, 12vw, 50px);
+      height: clamp(20px, 5vw, 24px);
+    }
+    
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #555;
+      transition: .4s;
+      border-radius: 24px;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: clamp(16px, 4vw, 18px);
+      width: clamp(16px, 4vw, 18px);
+      left: clamp(3px, 1vw, 4px);
+      bottom: clamp(2px, 1vw, 3px);
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .slider {
+      background-color: var(--green);
+    }
+    
+    input:checked + .slider:before {
+      transform: translateX(clamp(21px, 5vw, 26px));
+    }
+    
+    /* Leaderboard Styles */
+    .leaderboard {
+      margin: 15px 0;
+    }
+    
+    .leaderboard ol {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      text-align: left;
+    }
+    
+    .leaderboard li {
+      padding: clamp(8px, 2.5vw, 10px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: clamp(13px, 3vw, 15px);
+    }
+    
+    .leaderboard li:last-child {
+      border-bottom: none;
+    }
+    
+    .rank {
+      flex-shrink: 0;
+      width: clamp(22px, 5vw, 24px);
+      height: clamp(22px, 5vw, 24px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-weight: bold;
+    }
+    
+    .rank-1 { background: #ffd700; color: #000; }
+    .rank-2 { background: #c0c0c0; color: #000; }
+    .rank-3 { background: #cd7f32; color: #000; }
+    .rank-other { background: rgba(255,255,255,0.1); }
+    
+    .player-name {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    .player-amount {
+      color: var(--green);
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+    
+    /* Button Styles */
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.3);
+      color: var(--text);
+      padding: clamp(10px, 3vw, 12px);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      font-size: clamp(14px, 3.5vw, 16px);
+      width: 100%;
+      margin-top: 10px;
+    }
+    
+    .btn-ghost:active {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.5);
+    }
+    
+    @media (hover: hover) {
+      .btn-ghost:hover {
+        background: rgba(255,255,255,0.1);
+        border-color: rgba(255,255,255,0.5);
+      }
+    }
+    
+    /* Legal Notice */
+    .legal-notice {
+      margin: 20px auto;
+      max-width: 700px;
+      background: rgba(17, 17, 17, 0.8);
+      color: #ccc;
+      padding: clamp(15px, 4vw, 20px);
+      border-radius: 10px;
+      font-size: clamp(12px, 3vw, 14px);
+      text-align: left;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .legal-notice h3 {
+      color: #fff;
+      margin-top: 0;
+      font-size: clamp(16px, 4vw, 18px);
+    }
+    
+    /* Age Verification Buttons */
+    .age-btn {
+      padding: clamp(12px, 3vw, 14px) clamp(20px, 5vw, 35px);
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: clamp(14px, 3.5vw, 16px);
+      flex: 1;
+      min-width: 180px;
+    }
+    
+    .age-confirm {
+      background: linear-gradient(90deg, #8E2DE2, #00E676);
+      color: white;
+    }
+    
+    .age-deny {
+      background: transparent;
+      border: 1px solid #ff4757;
+      color: #ff4757;
+    }
+    
+    .age-btn:active {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    
+    @media (hover: hover) {
+      .age-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+      }
+    }
+    
+    /* Responsive Layout for Larger Screens */
+    @media (min-width: 768px) {
+      .container {
+        max-width: 900px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: flex-start;
+      }
+      
+      .game-card {
+        max-width: 450px;
+      }
+      
+      .leaderboard-card {
+        max-width: 450px;
+      }
+    }
+    
+    /* Very Small Devices */
+    @media (max-width: 320px) {
+      body {
+        padding: 10px;
+      }
+      
+      .game-card {
+        padding: 12px;
+      }
+      
+      .wheel-container {
+        max-width: 250px;
+      }
+      
+      .footer-links {
+        gap: 6px;
+      }
+      
+      .footer-links a {
+        padding: 4px 8px;
+        font-size: 11px;
+      }
+    }
+    
+    /* Landscape Mode */
+    @media (max-height: 600px) and (orientation: landscape) {
+      body {
+        padding: 10px;
+        min-height: auto;
+      }
+      
+      .container {
+        flex-direction: row;
+        gap: 15px;
+      }
+      
+      .game-card {
+        max-width: 350px;
+      }
+      
+      .wheel-container {
+        max-width: 200px;
+      }
+      
+      .history {
+        max-height: 100px;
+      }
+    }
+    
+    /* Animations */
+    @keyframes cardEntrance {
+      0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-20px) scale(1.05); }
+    }
+    
+    @keyframes coinFloat {
+      0%, 100% { 
+        transform: translateY(0) rotate(0deg) scale(1); 
+        opacity: 0.5; 
+      }
+      25% { 
+        transform: translateY(-25px) rotate(90deg) scale(1.1); 
+        opacity: 0.8; 
+      }
+      50% { 
+        transform: translateY(-50px) rotate(180deg) scale(1.2); 
+        opacity: 1; 
+      }
+      75% { 
+        transform: translateY(-25px) rotate(270deg) scale(1.1); 
+        opacity: 0.8; 
+      }
+    }
+    
+    @keyframes sparkleTwinkle { 
+      0%, 100% { opacity: 0.1; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+    
+    /* Loading Spinner */
+    .loading-spinner {
+      display: none;
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: var(--green);
+      animation: spin 1s linear infinite;
+      margin: 10px auto;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Prevent text selection on buttons */
+    button {
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    
+    /* Better touch targets for mobile */
+    button, .switch {
+      min-height: 44px;
+    }
+    
+    .switch input {
+      min-height: 44px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Age Verification Modal -->
+  <div id="age-verify">
+    <div class="age-modal">
+      <h2 style="color:#ffd43b;margin-top:0;font-size:clamp(22px, 5vw, 28px);text-shadow:0 0 10px rgba(255,212,59,0.5);">⚠️ AGE VERIFICATION REQUIRED</h2>
+      <p style="font-size:clamp(16px, 4vw, 18px);margin-bottom:10px;color:#ffffff;">You must be <strong style="color:#00E676;">18 years or older</strong> to access the casino game.</p>
+      <p style="color:#cbd5e1;font-size:clamp(13px, 3vw, 14px);margin-bottom:30px;">This game contains simulated gambling elements for entertainment purposes only.</p>
+      <div style="margin-top:30px;display:flex;gap:15px;justify-content:center;flex-wrap:wrap;">
+        <button class="age-btn age-confirm" onclick="verifyAge(true)">
+          ✅ I am 18+ years old
+        </button>
+        <button class="age-btn age-deny" onclick="verifyAge(false)">
+          ❌ I am under 18
+        </button>
+      </div>
+      <p style="color:#94a3b8;font-size:clamp(11px, 2.5vw, 12px);margin-top:25px;line-height:1.5;">
+        By clicking "I am 18+ years old", you confirm that you are of legal age to view this content in your jurisdiction.
+      </p>
+    </div>
+  </div>
+  
+  <!-- Animated Background -->
+  <div class="bg-animation">
+    <div class="bg-element bg-1"></div>
+    <div class="bg-element bg-2"></div>
+  </div>
+  
+  <!-- Crypto Animation -->
+  <div class="crypto-animation">
+    <div class="coin">₿</div>
+    <div class="coin">Ξ</div>
+    <div class="coin">$</div>
+    <div class="coin">€</div>
+    <div class="coin">£</div>
+    <div class="coin">¥</div>
+    <div class="coin">₿</div>
+    <div class="coin">Ξ</div>
+  </div>
+  
+  <!-- Sparkle Effect -->
+  <div class="sparkle" aria-hidden="true">
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i>
+  </div>
+
+  <div class="container">
+    <!-- Main Game Card -->
+    <div class="game-card">
+      <h1>🎰 MoneyTalks Game Arena Roulette</h1>
+
+      <!-- Game Instructions Section -->
+      <div class="instructions">
+        <h3>How to Play</h3>
+        <ul>
+          <li>Each spin costs <span class="highlight">$0.25</span> from your credits</li>
+          <li>Spin the wheel to win crypto links or credits prizes</li>
+          <li>Win crypto faucet links to earn free cryptocurrency</li>
+          <li>Credits prizes are added directly to your credits</li>
+          <li>Add more funds anytime to continue playing</li>
+        </ul>
+        <div class="note">
+          💡 When you lose a spin, your $0.25 goes to the house (MoneyTalks account)
+        </div>
+      </div>
+
+      <!-- Sound Toggle -->
+      <div class="sound-control">
+        <span class="sound-label">Sound Effects:</span>
+        <label class="switch">
+          <input type="checkbox" id="sound-toggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="credits-box">
+        <span>Your Game Credits:</span>
+        <span id="credits">$0.00</span>
+      </div>
+
+      <button id="add-funds-btn">💳 Buy Credits to Play</button>
+      <div id="paypal-options">
+        <div id="paypal-5"></div>
+        <div id="paypal-10"></div>
+        <div id="paypal-20"></div>
+      </div>
+
+      <div class="wheel-container">
+        <div class="pointer" id="pointer"></div>
+        <canvas id="wheel" width="300" height="300"></canvas>
+      </div>
+
+      <button class="spin-btn" id="spin-btn" disabled>SPIN FOR $0.25</button>
+
+      <div id="result">⚠️ Add credits to start playing.</div>
+      <div class="crypto-links" id="crypto-links"></div>
+
+      <div class="history" id="history"><b>🔄 Spin History</b><br></div>
+    </div>
+
+    <!-- Leaderboard Card -->
+    <div class="game-card leaderboard-card">
+      <h2>🏆 Today's Top Winners</h2>
+      <div class="leaderboard">
+        <ol>
+          <li>
+            <span class="rank rank-1">1</span>
+            <span class="player-name">CryptoKing</span>
+            <span class="player-amount">$12.50</span>
+          </li>
+          <li>
+            <span class="rank rank-2">2</span>
+            <span class="player-name">BitcoinGirl</span>
+            <span class="player-amount">$8.75</span>
+          </li>
+          <li>
+            <span class="rank rank-3">3</span>
+            <span class="player-name">MoonHunter</span>
+            <span class="player-amount">$6.30</span>
+          </li>
+          <li>
+            <span class="rank rank-other">4</span>
+            <span class="player-name">You</span>
+            <span id="user-rank" class="player-amount">$0.00</span>
+          </li>
+        </ol>
+      </div>
+      <button onclick="updateLeaderboard()" class="btn-ghost">🔄 Refresh Leaderboard</button>
+    </div>
+  </div>
+
+  <!-- Footer Links -->
+  <div class="footer-links">
+    <a href="about.html">About</a>
+    <a href="terms.html">Terms</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="disclaimer.html">Disclaimer</a>
+    <a href="faq.html">FAQ</a>
+  </div>
+
+  <!-- Legal Notice -->
+  <div class="legal-notice">
+    <h3>Important Information</h3>
+    <p>
+      All credits shown on this page are <strong>virtual game credits</strong> used only for gameplay and rewards.
+      These credits have <strong>no cash value</strong> and cannot be withdrawn or transferred.
+    </p>
+    <p>
+      MoneyTalks earns revenue through <strong>sponsored links, referrals, and partner platforms</strong>
+      that users may access as part of gameplay rewards.
+    </p>
+    <p>
+      By playing this game, you agree that rewards are provided for <strong>entertainment and engagement purposes only</strong>.
+    </p>
+  </div>
+
+  <!-- Sounds -->
+  <audio id="spin-sound" src="https://actions.google.com/sounds/v1/ambiences/roulette_wheel.ogg"></audio>
+  <audio id="ding-sound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+
+  <!-- Loading Spinner -->
+  <div class="loading-spinner" id="loading-spinner"></div>
+
+  <script>
+    // Age Verification Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check if age is already verified
+      if(!localStorage.getItem('age_verified')) {
+        document.getElementById('age-verify').style.display = 'flex';
+        // Prevent scrolling while age verification is shown
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.getElementById('age-verify').style.display = 'none';
+        // Initialize game immediately if already verified
+        initializeGame();
+      }
+    });
+
+    function verifyAge(isAdult) {
+      if(isAdult) {
+        // Set age verification flag
+        localStorage.setItem('age_verified', 'true');
+        
+        // Hide verification modal with animation
+        const modal = document.getElementById('age-verify');
+        modal.style.animation = 'fadeOut 0.5s ease forwards';
+        
+        // Restore scrolling after animation
+        setTimeout(() => {
+          modal.style.display = 'none';
+          document.body.style.overflow = '';
+          
+          // Initialize game after verification
+          initializeGame();
+          
+          // Show welcome notification
+          if (typeof showNotification === 'function') {
+            showNotification('✅ Age verified! Welcome to MoneyTalks Game Arena!', 'success');
+          }
+        }, 500);
+        
+      } else {
+        // User is under 18 - show denial message
+        const modal = document.getElementById('age-verify');
+        modal.innerHTML = `
+          <div class="age-modal" style="border-color:#ff4757;">
+            <h2 style="color:#ff4757;margin-top:0;">Access Denied</h2>
+            <p style="color:#ffffff;font-size:clamp(16px, 4vw, 18px);margin-bottom:20px;">You must be 18+ to access this content.</p>
+            <p style="color:#cbd5e1;margin-bottom:30px;font-size:clamp(14px, 3.5vw, 16px);">Thank you for your honesty.</p>
+            <button onclick="window.location.href='https://www.google.com'" style="padding:12px 30px;background:#475569;border:none;border-radius:10px;color:white;font-weight:bold;cursor:pointer;font-size:16px;width:100%;max-width:250px;">
+              Return to Safety
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    // Initialize game after age verification
+    function initializeGame() {
+      // DOM Elements
+      const canvas = document.getElementById("wheel");
+      const ctx = canvas.getContext("2d");
+      const spinBtn = document.getElementById("spin-btn");
+      const balanceEl = document.getElementById("credits");
+      const resultBox = document.getElementById("result");
+      const historyEl = document.getElementById("history");
+      const cryptoLinksDiv = document.getElementById("crypto-links");
+      const addFundsBtn = document.getElementById("add-funds-btn");
+      const paypalOptions = document.getElementById("paypal-options");
+      const pointer = document.getElementById("pointer");
+      const spinSound = document.getElementById("spin-sound");
+      const dingSound = document.getElementById("ding-sound");
+      const loadingSpinner = document.getElementById("loading-spinner");
+
+      // Game State
+      let credits = 0, spinning = false, spinCount = 0, currentDeg = 0, highlightedIndex = -1;
+      const segments = ["SITE1","😅 Try Again","💰 $0.15","SITE2","😅 Try Again","SITE3"];
+      const colors = ["#ff4e50","#f9d423","#24c6dc","#4CAF50","#4776E6","#ee0979"];
+      const cryptoSites = [
+        "https://autofaucet.org/r/Saadq123",
+        "https://example.com/site2",
+        "https://example.com/site3"
+      ];
+
+      // Initialize canvas based on device pixel ratio for crisp rendering
+      function initCanvas() {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        
+        ctx.scale(dpr, dpr);
+        drawWheel();
+      }
+
+      // Draw the wheel
+      function drawWheel(highlight = -1) {
+        const width = canvas.width / (window.devicePixelRatio || 1);
+        const height = canvas.height / (window.devicePixelRatio || 1);
+        const centerX = width / 2;
+        const centerY = height / 2;
+        const radius = Math.min(width, height) / 2;
+        
+        const arc = 2 * Math.PI / segments.length;
+        
+        ctx.clearRect(0, 0, width, height);
+        
+        for(let i = 0; i < segments.length; i++) {
+          const angle = i * arc;
+          ctx.beginPath();
+          ctx.fillStyle = (i === highlight) ? "#ffff66" : colors[i];
+          ctx.moveTo(centerX, centerY);
+          ctx.arc(centerX, centerY, radius, angle, angle + arc);
+          ctx.fill();
+          
+          // Draw segment text
+          ctx.save();
+          ctx.translate(
+            centerX + Math.cos(angle + arc / 2) * (radius * 0.6),
+            centerY + Math.sin(angle + arc / 2) * (radius * 0.6)
+          );
+          ctx.rotate(angle + arc / 2 + Math.PI / 2);
+          ctx.fillStyle = (i === highlight) ? "#000" : "#fff";
+          ctx.font = `bold ${Math.max(12, radius * 0.1)}px Inter`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          
+          // Truncate long text for small screens
+          let text = segments[i];
+          if (width < 250 && text.length > 8) {
+            text = text.substring(0, 6) + '...';
+          }
+          
+          ctx.fillText(text, 0, 0);
+          ctx.restore();
+        }
+      }
+
+      // Wheel outcome logic
+      function getOutcome(spin) {
+        if(spin === 1) return "😅 Try Again";
+        if(spin === 2) return "SITE1";
+        if(spin === 3) return "😅 Try Again";
+        if(spin === 4) return "😅 Try Again";
+        if(spin === 5) return "💰 $0.15";
+        if(spin === 6) return "SITE2";
+        if(spin >= 7 && spin <= 9) return "😅 Try Again";
+        if(spin === 10) return "SITE3";
+        if(spin === 11) return "💰 $0.15";
+        if(spin >= 12 && spin <= 16) return "😅 Try Again";
+        if(spin === 17) return "SITE1";
+        if(spin === 19) return "💰 $0.15";
+        if(spin === 20) return "SITE2";
+        if((spin >= 18 && spin <= 27) || (spin >= 21 && spin <= 30)) return "😅 Try Again";
+        
+        const randomOutcomes = ["SITE1","SITE2","SITE3","😅 Try Again","💰 $0.15"];
+        return randomOutcomes[Math.floor(Math.random() * randomOutcomes.length)];
+      }
+
+      // Spin button click handler
+      spinBtn.addEventListener("click", () => {
+        if(spinning) return;
+        if(credits < 0.25) {
+          resultBox.textContent = "❌ Not enough credits!";
+          resultBox.style.color = "#ff6b6b";
+          return;
+        }
+        
+        spinning = true;
+        spinCount++;
+        credits -= 0.25;
+        balanceEl.textContent = "$" + credits.toFixed(2);
+        
+        // Update user rank
+        updateUserRank();
+        
+        // Play sound if enabled
+        if(!spinSound.muted) spinSound.play().catch(e => console.log("Audio play failed:", e));
+        
+        // Show loading
+        spinBtn.disabled = true;
+        spinBtn.textContent = "SPINNING...";
+        
+        let deg = currentDeg;
+        let speed = 30;
+        const spinInterval = setInterval(() => {
+          deg += speed;
+          speed *= 0.97;
+          
+          if(speed < 0.5) {
+            clearInterval(spinInterval);
+            spinning = false;
+            currentDeg = deg % 360;
+            
+            const outcome = getOutcome(spinCount);
+            setTimeout(() => showResult(outcome), 300);
+            
+            pointer.classList.add("glow");
+            if(!dingSound.muted) dingSound.play().catch(e => console.log("Audio play failed:", e));
+            
+            setTimeout(() => {
+              pointer.classList.remove("glow");
+              spinBtn.disabled = false;
+              spinBtn.textContent = "SPIN FOR $0.25";
+            }, 3000);
+          }
+          
+          ctx.save();
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          const width = canvas.width / (window.devicePixelRatio || 1);
+          const height = canvas.height / (window.devicePixelRatio || 1);
+          ctx.translate(width / 2, height / 2);
+          ctx.rotate(deg * Math.PI / 180);
+          ctx.translate(-width / 2, -height / 2);
+          drawWheel(highlightedIndex);
+          ctx.restore();
+        }, 30);
+      });
+
+      // Show result
+      function showResult(outcome) {
+        highlightedIndex = segments.findIndex(s => 
+          s === outcome || 
+          (outcome.startsWith("SITE") && s.startsWith("SITE")) || 
+          (outcome.includes("$0.15") && s.includes("$0.15")) || 
+          (outcome === "😅 Try Again" && s === "😅 Try Again")
+        );
+        
+        drawWheel(highlightedIndex);
+        
+        setTimeout(() => {
+          highlightedIndex = -1;
+          drawWheel();
+        }, 3000);
+        
+        // Clear previous crypto links
+        cryptoLinksDiv.innerHTML = '';
+        
+        if(outcome.startsWith("SITE")) {
+          let idx = parseInt(outcome.replace("SITE", "")) - 1;
+          resultBox.textContent = "🚀 You won a Crypto Link!";
+          resultBox.style.color = "#4CAF50";
+          
+          let btn = document.createElement("button");
+          btn.textContent = `Open Site ${idx + 1}`;
+          btn.onclick = () => window.open(cryptoSites[idx], "_blank");
+          cryptoLinksDiv.appendChild(btn);
+        } else if(outcome.includes("$0.15")) {
+          credits += 0.15;
+          balanceEl.textContent = "$" + credits.toFixed(2);
+          resultBox.textContent = "🎉 You won $0.15!";
+          resultBox.style.color = "#4CAF50";
+          updateUserRank();
+        } else {
+          resultBox.textContent = "😅 Try Again!";
+          resultBox.style.color = "#ffd86b";
+        }
+        
+        // Add to history with timestamp
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        historyEl.innerHTML += `<br>Spin ${spinCount} (${timeStr}): ${outcome}`;
+        historyEl.scrollTop = historyEl.scrollHeight;
+      }
+
+      // Add funds button
+      addFundsBtn.addEventListener("click", () => {
+        paypalOptions.style.display = paypalOptions.style.display === "none" ? "block" : "none";
+      });
+
+      // PayPal integration
+      function renderPayPal(containerId, amount) {
+        paypal.Buttons({
+          createOrder: (data, actions) => actions.order.create({
+            purchase_units: [{ amount: { value: amount.toFixed(2) } }]
+          }),
+          onApprove: (data, actions) => actions.order.capture().then(() => {
+            credits += amount;
+            balanceEl.textContent = "$" + credits.toFixed(2);
+            resultBox.textContent = `✅ $${amount.toFixed(2)} added via PayPal!`;
+            resultBox.style.color = "#4CAF50";
+            
+            historyEl.innerHTML += `<br>💰 Added $${amount.toFixed(2)} via PayPal`;
+            historyEl.scrollTop = historyEl.scrollHeight;
+            
+            spinBtn.disabled = false;
+            updateUserRank();
+            
+            // Hide PayPal options
+            paypalOptions.style.display = "none";
+          }),
+          onError: (err) => {
+            resultBox.textContent = "❌ Payment failed. Please try again.";
+            resultBox.style.color = "#ff6b6b";
+          }
+        }).render(containerId);
+      }
+      
+      // Initialize PayPal buttons
+      setTimeout(() => {
+        renderPayPal("#paypal-5", 5);
+        renderPayPal("#paypal-10", 10);
+        renderPayPal("#paypal-20", 20);
+      }, 1000);
+
+      // Sound toggle
+      const soundToggle = document.getElementById('sound-toggle');
+      if (soundToggle) {
+        soundToggle.addEventListener('change', function() {
+          spinSound.muted = !this.checked;
+          dingSound.muted = !this.checked;
+          localStorage.setItem('game_sound', this.checked);
+        });
+        
+        // Load saved preference
+        const soundPref = localStorage.getItem('game_sound');
+        if (soundPref !== null) {
+          soundToggle.checked = soundPref === 'true';
+          spinSound.muted = !soundToggle.checked;
+          dingSound.muted = !soundToggle.checked;
+        }
+      }
+      
+      // Leaderboard functions
+      function updateLeaderboard() {
+        const userRank = document.getElementById('user-rank');
+        if (userRank) {
+          const current = parseFloat(userRank.textContent.replace('$', '')) || 0;
+          const newAmount = (current + Math.random() * 0.5).toFixed(2);
+          userRank.textContent = `$${newAmount}`;
+          
+          // Show notification
+          if (resultBox) {
+            resultBox.textContent = "Leaderboard updated! Keep playing to climb higher!";
+            resultBox.style.color = "#ffd86b";
+            
+            // Reset color after 3 seconds
+            setTimeout(() => {
+              if (!spinning) {
+                resultBox.style.color = "";
+              }
+            }, 3000);
+          }
+        }
+      }
+      
+      // Update user rank based on current credits
+      function updateUserRank() {
+        const userRank = document.getElementById('user-rank');
+        if (userRank) {
+          userRank.textContent = `$${credits.toFixed(2)}`;
+        }
+      }
+      
+      // Daily challenge
+      function checkDailyChallenge() {
+        const today = new Date().toDateString();
+        const lastChallenge = localStorage.getItem('last_challenge_date');
+        
+        if (lastChallenge !== today) {
+          // New daily challenge
+          const challenges = [
+            "Spin 5 times today for bonus!",
+            "Win 3 times for extra $1",
+            "Refer a friend for free spins"
+          ];
+          
+          const challenge = challenges[Math.floor(Math.random() * challenges.length)];
+          const resultBox = document.getElementById('result');
+          if (resultBox) {
+            resultBox.innerHTML += `<br><small style="color:#ffd86b">🎯 Daily: ${challenge}</small>`;
+          }
+          
+          localStorage.setItem('last_challenge_date', today);
+        }
+      }
+      
+      // Initialize game elements
+      initCanvas();
+      checkDailyChallenge();
+      updateUserRank();
+      
+      // Enable spin button if credits available
+      if (credits >= 0.25) {
+        spinBtn.disabled = false;
+      }
+      
+      // Handle window resize
+      let resizeTimeout;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          initCanvas();
+        }, 250);
+      });
+      
+      // Prevent zoom on double tap (iOS)
+      let lastTouchEnd = 0;
+      document.addEventListener('touchend', function(event) {
+        const now = (new Date()).getTime();
+        if (now - lastTouchEnd <= 300) {
+          event.preventDefault();
+        }
+        lastTouchEnd = now;
+      }, false);
+    }
+  </script>
+
+<!-- GLOBAL ENHANCEMENTS SCRIPT -->
+<script>
+// Global Enhancements for MoneyTalks
+function checkFirstVisit() { if (!localStorage.getItem('first_visit')) { setTimeout(() => { showNotification('👋 Welcome to MoneyTalks!', 'info'); localStorage.setItem('first_visit', 'true'); }, 2000); } }
+function showPeriodicNotifications() { const n = ["💡 Complete daily goals!","🎰 Try the casino game!","👥 Invite friends!","📈 Upgrade your plan!"]; setInterval(() => { showNotification(n[Math.floor(Math.random()*n.length)], 'info'); }, 300000); }
+function showNotification(m,t='info') { const s={success:{bg:'#00E676',icon:'✅'},error:{bg:'#ff4757',icon:'❌'},warning:{bg:'#ffa502',icon:'⚠️'},info:{bg:'#8E2DE2',icon:'💡'}}[t]||{bg:'#8E2DE2',icon:'💡'}; document.querySelectorAll('.global-notification').forEach(e=>e.remove()); const n=document.createElement('div'); n.className='global-notification'; n.style.cssText=`position:fixed;top:20px;right:20px;background:${s.bg};color:white;padding:12px 20px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.3);z-index:10000;animation:slideIn 0.3s ease;display:flex;align-items:center;gap:10px;max-width:350px;font-family:Inter,sans-serif;`; n.innerHTML=`${s.icon} ${m}`; document.body.appendChild(n); setTimeout(()=>{n.style.animation='slideOut 0.3s ease';setTimeout(()=>n.remove(),300);},3000);}
+function initThemeToggle() { if(document.querySelector('.theme-toggle'))return; const t=localStorage.getItem('moneytalks_theme')||'dark'; applyTheme(t); const l=document.getElementById('mt_lang_selector_container'); if(l){ const b=document.createElement('div'); b.className='theme-toggle'; b.style.cssText=`display:inline-flex;align-items:center;gap:8px;font-weight:700;color:#cbd5e1;background:rgba(0,0,0,0.25);padding:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(4px);margin-left:8px;cursor:pointer;`; b.innerHTML=t=='dark'?'🌙':'☀️'; b.title='Toggle theme'; b.addEventListener('click',function(){ const c=localStorage.getItem('moneytalks_theme')||'dark'; const n=c=='dark'?'light':'dark'; localStorage.setItem('moneytalks_theme',n); applyTheme(n); this.innerHTML=n=='dark'?'🌙':'☀️'; showNotification(`${n} theme`,'info');}); l.parentNode.insertBefore(b,l.nextSibling);}}
+function applyTheme(t){ if(t=='light'){ document.documentElement.style.setProperty('--bg-dark','#f8fafc'); document.documentElement.style.setProperty('--bg-mid','#e2e8f0'); document.documentElement.style.setProperty('--text','#1e293b'); document.documentElement.style.setProperty('--muted','#64748b'); } else { document.documentElement.style.setProperty('--bg-dark','#0d0221'); document.documentElement.style.setProperty('--bg-mid','#0a0f2c'); document.documentElement.style.setProperty('--text','#ffffff'); document.documentElement.style.setProperty('--muted','#cbd5e1'); }}
+function initCopyFunctionality(){ document.addEventListener('click',function(e){ if(e.target.classList.contains('copy-btn')||e.target.closest('.copy-btn')){ const i=document.querySelector('input[readonly]')||e.target.previousElementSibling; if(i){ i.select(); navigator.clipboard.writeText(i.value).then(()=>{ showNotification('Copied!','success'); }); }}});}
+document.addEventListener('DOMContentLoaded',function(){ checkFirstVisit(); initThemeToggle(); initCopyFunctionality(); setTimeout(()=>showPeriodicNotifications(),10000); setTimeout(()=>{ document.querySelectorAll('.btn-primary').forEach(el=>{ el.classList.add('pulse'); setTimeout(()=>el.classList.remove('pulse'),6000);});},3000);});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earnings Disclaimer - MoneyTalks</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --purple: #8E2DE2;
+            --green: #00E676;
+            --text: #ffffff;
+            --muted: #cbd5e1;
+            --bg-dark: #0d0221;
+            --bg-mid: #0a0f2c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(120deg, var(--bg-dark) 0%, var(--bg-mid) 35%, #051f1b 100%);
+            color: var(--text);
+            padding: 40px 20px;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(142,45,226,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .container::before {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--purple), var(--green));
+            border-radius: 20px 20px 0 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        h1 {
+            color: #ff4757;
+            margin-bottom: 10px;
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h1::before {
+            content: "⚠️";
+        }
+        
+        .last-updated {
+            color: var(--muted);
+            margin-bottom: 30px;
+            font-size: 14px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .warning-box {
+            background: rgba(255,71,87,0.1);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid #ff4757;
+            margin: 25px 0;
+        }
+        
+        .warning-box h2 {
+            color: #ff4757;
+            margin-top: 0;
+        }
+        
+        h2 {
+            color: var(--purple);
+            margin: 30px 0 15px 0;
+            font-size: 22px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        h3 {
+            color: var(--green);
+            margin: 20px 0 10px 0;
+            font-size: 18px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            margin: 15px 0 15px 30px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .real, .simulated {
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .real {
+            background: rgba(0,230,118,0.1);
+            border: 1px solid rgba(0,230,118,0.3);
+        }
+        
+        .simulated {
+            background: rgba(255,71,87,0.1);
+            border: 1px solid rgba(255,71,87,0.3);
+        }
+        
+        .real h3, .simulated h3 {
+            margin-top: 0;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(90deg, var(--purple), var(--green));
+            color: white;
+            text-decoration: none;
+            border-radius: 999px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(142,45,226,0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--muted);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 26px;
+            }
+            
+            h2 {
+                font-size: 20px;
+            }
+            
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>IMPORTANT EARNINGS DISCLAIMER</h1>
+        <p class="last-updated"><strong>Last Updated:</strong> December 2023</p>
+        
+        <div class="warning-box">
+            <h2>⚠️ PLEASE READ THIS CAREFULLY BEFORE USING MONEYTALKS</h2>
+            <p><strong>The earnings displayed in your MoneyTalks dashboard are SIMULATED FOR DEMONSTRATION AND ENTERTAINMENT PURPOSES ONLY.</strong></p>
+            <p>This is a critical distinction you must understand before using our service.</p>
+        </div>
+        
+        <h2>What This Means For You</h2>
+        <p>MoneyTalks has TWO types of features:</p>
+        
+        <div class="comparison">
+            <div class="real">
+                <h3>✅ REAL FEATURES</h3>
+                <p>These work with real money/value:</p>
+                <ul>
+                    <li><strong>Plan Purchases:</strong> Real PayPal payments</li>
+                    <li><strong>Links to Sites:</strong> Real cryptocurrency sites</li>
+                    <li><strong>Email Verification:</strong> Real email system</li>
+                    <li><strong>Third-Party Earnings:</strong> Real earnings from linked sites</li>
+                </ul>
+            </div>
+            
+            <div class="simulated">
+                <h3>🎮 SIMULATED FEATURES</h3>
+                <p>These are for demonstration only:</p>
+                <ul>
+                    <li><strong>Dashboard Balance:</strong> Simulated numbers</li>
+                    <li><strong>"Quick Earn" Button:</strong> Simulation only</li>
+                    <li><strong>Game Credits:</strong> Virtual, no cash value</li>
+                    <li><strong>Referral Bonuses:</strong> Simulated in dashboard</li>
+                </ul>
+            </div>
+        </div>
+        
+        <h2>Understanding Actual Earnings</h2>
+        <p>When you click links from MoneyTalks to third-party sites:</p>
+        <ul>
+            <li><strong>You earn REAL cryptocurrency</strong> from those external sites</li>
+            <li><strong>MoneyTalks does NOT receive</strong> any of your earnings</li>
+            <li><strong>Earnings vary greatly</strong> based on many factors</li>
+            <li><strong>We cannot guarantee</strong> any specific earnings amount</li>
+        </ul>
+        
+        <h2>Factors Affecting Real Earnings</h2>
+        <h3>✅ Things That Increase Earnings:</h3>
+        <ul>
+            <li>Time invested in earning activities</li>
+            <li>Geographic location (some countries earn more)</li>
+            <li>Using multiple earning methods</li>
+            <li>Referral networks</li>
+            <li>Market conditions</li>
+        </ul>
+        
+        <h3>❌ Things That Decrease Earnings:</h3>
+        <ul>
+            <li>Faucet withdrawal limits</li>
+            <li>Minimum payout thresholds</li>
+            <li>Transaction fees</li>
+            <li>Site-specific rules changes</li>
+            <li>Cryptocurrency price fluctuations</li>
+        </ul>
+        
+        <div class="warning-box">
+            <h2>⚠️ NO FINANCIAL GUARANTEES</h2>
+            <p><strong>We make NO promises about:</strong></p>
+            <ul>
+                <li>Specific earnings amounts</li>
+                <li>Return on investment</li>
+                <li>Profitability of any strategy</li>
+                <li>Future cryptocurrency prices</li>
+            </ul>
+            <p><strong>Cryptocurrency involves risk.</strong> Prices go up AND down. You could lose money.</p>
+        </div>
+        
+        <h2>Our Role vs. Third-Party Sites</h2>
+        <p><strong>MoneyTalks is a directory service.</strong> We:</p>
+        <ul>
+            <li>Curate and organize earning sites</li>
+            <li>Provide convenient access</li>
+            <li>Offer educational resources</li>
+            <li>Create engaging user experience</li>
+        </ul>
+        
+        <p><strong>We are NOT:</strong></p>
+        <ul>
+            <li>A cryptocurrency exchange</li>
+            <li>Your employer</li>
+            <li>A financial advisor</li>
+            <li>Responsible for third-party site terms</li>
+        </ul>
+        
+        <h2>For Educational & Entertainment Purposes</h2>
+        <p>MoneyTalks is designed to:</p>
+        <ul>
+            <li>Educate about cryptocurrency earning opportunities</li>
+            <li>Provide entertainment through gamification</li>
+            <li>Simplify discovery of legitimate sites</li>
+            <li>Demonstrate potential earning concepts</li>
+        </ul>
+        
+        <p><strong>NOT as a get-rich-quick scheme.</strong> Real earnings require real work.</p>
+        
+        <h2>Your Responsibility</h2>
+        <p>By using MoneyTalks, you acknowledge:</p>
+        <ul>
+            <li>You understand simulated vs real features</li>
+            <li>You are responsible for your own earnings</li>
+            <li>You have read third-party site terms</li>
+            <li>You accept cryptocurrency risks</li>
+            <li>You are at least 18 years old</li>
+        </ul>
+        
+        <div class="warning-box">
+            <h2>⚠️ LEGAL DISCLAIMER</h2>
+            <p><strong>This is not financial advice.</strong> Consult a financial professional before making investment decisions.</p>
+            <p><strong>Past performance doesn't guarantee future results.</strong> Cryptocurrency is volatile.</p>
+            <p><strong>Only invest what you can afford to lose.</strong></p>
+        </div>
+        
+        <div class="btn-group">
+            <a href="homepage.html" class="btn">← Back to Homepage</a>
+            <a href="terms.html" class="btn btn-secondary">View Full Terms of Service</a>
+        </div>
+    </div>
+</body>
+</html>

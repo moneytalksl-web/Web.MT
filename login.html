@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoneyTalks - Login & Registration</title>
+    <script src="https://www.paypal.com/sdk/js?client-id=AXMTfOoz5WNRdOjT2blrlrxEZd7OPtKWAFDC_IdSfwD5OmkqoP2eyJrshBStJhkOHdh6ShcRWt5Xz8ow&currency=USD"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    
+    <!-- GLOBAL CSS -->
+    <style>
+      /* shared.css - Global styles */
+      .btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; position: relative; overflow: hidden; }
+      .btn:active { transform: translateY(2px) !important; }
+      .card { transition: transform 0.3s ease, box-shadow 0.3s ease !important; }
+      .card:hover { transform: translateY(-5px) !important; box-shadow: 0 20px 40px rgba(0,0,0,0.3) !important; }
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+      ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #8E2DE2, #00E676); border-radius: 4px; }
+      ::selection { background: rgba(142, 45, 226, 0.3); color: white; }
+      :focus { outline: 2px solid #8E2DE2; outline-offset: 2px; }
+      .loading-spinner { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1); border-top-color: #8E2DE2; border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .gradient-text { background: linear-gradient(90deg, #8E2DE2, #00E676); -webkit-background-clip: text; background-clip: text; color: transparent; display: inline-block; }
+      .pulse { animation: pulse 2s infinite; }
+      @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+      .fade-in { animation: fadeIn 0.5s ease; }
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+      @media (max-width: 768px) { .hide-mobile { display: none !important; } .mobile-stack { flex-direction: column !important; } .mobile-center { text-align: center !important; } }
+      @media print { .no-print { display: none !important; } }
+      @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+      @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+      [data-tooltip] { position: relative; }
+      [data-tooltip]:hover::after { content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; white-space: nowrap; z-index: 1000; pointer-events: none; }
+    </style>
+    
+    <style>
+        :root {
+            --purple: #8E2DE2;
+            --green: #00E676;
+            --text: #ffffff;
+            --muted: #cbd5e1;
+            --overlay: rgba(0,0,0,.35);
+            --btn-blue: #eaf2ff;
+            --btn-blue-border: #c7dbff;
+            --bg-dark: #0d0221;
+            --bg-mid: #0a0f2c;
+            --bg-light: #051f1b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            color: var(--text);
+            background:
+                radial-gradient(1200px 600px at 80% -10%, rgba(142,45,226,.28), transparent 60%),
+                radial-gradient(1000px 600px at -10% 90%, rgba(0,230,118,.25), transparent 60%),
+                linear-gradient(120deg, var(--bg-dark) 0%, var(--bg-mid) 35%, var(--bg-light) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background: rgba(13, 2, 33, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            border: 1px solid rgba(142, 45, 226, 0.2);
+            backdrop-filter: blur(10px);
+            margin: 0 auto;
+        }
+
+        .container::before {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--purple), var(--green));
+        }
+
+        .form-container {
+            padding: 40px 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .logo-mark {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: conic-gradient(from 180deg, var(--purple), var(--green) 60%, var(--purple));
+            box-shadow: 0 12px 28px rgba(0,230,118,.22), 0 10px 26px rgba(142,45,226,.22);
+        }
+
+        .logo-mark span {
+            font-weight: 900;
+            font-size: 18px;
+            letter-spacing: 1px;
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(0,0,0,.5);
+        }
+
+        .logo-text {
+            font-weight: 900;
+            font-size: 24px;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, var(--purple), var(--green));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            font-size: 16px;
+            color: var(--text);
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--purple);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(142, 45, 226, 0.3);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 999px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--purple), var(--green));
+            color: white;
+            box-shadow: 0 8px 20px rgba(142, 45, 226, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(142, 45, 226, 0.4);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .toggle-form {
+            text-align: center;
+            margin-top: 25px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .toggle-form a {
+            color: var(--green);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .toggle-form a:hover {
+            text-decoration: underline;
+        }
+
+        .verification-section {
+            display: none;
+        }
+
+        .verification-code-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .verification-code-group input {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 5px;
+        }
+
+        .resend-code {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .resend-code a {
+            color: var(--green);
+            text-decoration: none;
+        }
+
+        .resend-code a:hover {
+            text-decoration: underline;
+        }
+
+        .password-strength {
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .strength-weak {
+            color: #ff6b6b;
+        }
+
+        .strength-medium {
+            color: #ffd166;
+        }
+
+        .strength-strong {
+            color: var(--green);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: rgba(13, 2, 33, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(142, 45, 226, 0.3);
+            position: relative;
+        }
+
+        .modal-content::before {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--purple), var(--green));
+            border-radius: 20px 20px 0 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .modal h3 {
+            margin-bottom: 15px;
+            color: var(--text);
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+        }
+
+        .modal p {
+            margin-bottom: 20px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--muted);
+        }
+
+        .close-modal:hover {
+            color: var(--text);
+        }
+
+        #paypal-button-container {
+            margin-top: 20px;
+        }
+
+        .login-attempts {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .login-attempts.warning {
+            color: #ff6b6b;
+            font-weight: 600;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .forgot-password a {
+            color: var(--green);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .success-message {
+            color: var(--green);
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .crypto-animation {
+            height: 60px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .coin {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--purple), var(--green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            opacity: 0.7;
+        }
+
+        .coin:nth-child(1) { left: 10%; animation: float-coin 4s ease-in-out infinite 1.8s; }
+        .coin:nth-child(2) { left: 30%; animation: float-coin 4s ease-in-out infinite 2s; }
+        .coin:nth-child(3) { left: 50%; animation: float-coin 4s ease-in-out infinite 2.2s; }
+        .coin:nth-child(4) { left: 70%; animation: float-coin 4s ease-in-out infinite 2.4s; }
+        .coin:nth-child(5) { left: 90%; animation: float-coin 4s ease-in-out infinite 2.6s; }
+
+        @keyframes float-coin {
+            0%, 100% { transform: translateY(0); opacity: 0.7; }
+            50% { transform: translateY(-15px); opacity: 1; }
+        }
+
+        /* Social Proof Styles */
+        .social-proof {
+            margin: 20px 0 30px;
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .proof-row {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .proof-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .proof-item span:first-child {
+            color: var(--green);
+        }
+
+        .proof-item span:last-child {
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        /* Demo Button Styles */
+        .demo-btn {
+            margin-top: 20px;
+            width: 100%;
+            padding: 14px;
+            border: 2px dashed rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.05);
+            transition: all 0.3s;
+        }
+
+        .demo-btn:hover {
+            border-color: var(--green);
+            background: rgba(0,230,118,0.1);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                max-width: 100%;
+            }
+            
+            .form-container {
+                padding: 30px 20px;
+            }
+
+            .proof-row {
+                gap: 10px;
+            }
+
+            .proof-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Language selector (fixed top-right) -->
+<div id="mt_lang_selector_container" style="position:fixed;top:12px;right:12px;z-index:9999;">
+    <label style="display:inline-flex;align-items:center;gap:8px;font-weight:700;color:#cbd5e1;background:rgba(0,0,0,0.25);padding:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);">
+        <span>🌐</span>
+        <select id="mt_lang_select" style="background:transparent;color:#fff;padding:6px;border-radius:6px;border:0;">
+            <option value="en">EN</option><option value="hi">HI</option><option value="ur">UR</option>
+            <option value="ar">AR</option><option value="zh">ZH</option><option value="ja">JA</option>
+            <option value="ko">KO</option><option value="ru">RU</option><option value="de">DE</option>
+            <option value="es">ES</option><option value="fr">FR</option><option value="tr">TR</option>
+            <option value="pt">PT</option><option value="id">ID</option>
+        </select>
+    </label>
+</div>
+
+<!-- MONEYTALKS Loader -->
+<div id="mt_loader_overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(120deg,#071026,#051f1b);display:flex;align-items:center;justify-content:center;z-index:100000;color:#fff;">
+    <div id="mt_loader_box" style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+        <div id="mt_loader_logo" style="font-weight:900;font-size:34px;letter-spacing:4px;color:#ffd86b;text-shadow:0 4px 30px rgba(255,220,107,0.12);">MONEYTALKS</div>
+        <div id="mt_loader_sub" style="color:#cbd5e1;font-size:14px;">Welcome — preparing your experience</div>
+    </div>
+</div>
+<script>
+    (function(){
+        try{
+            window.addEventListener('load', function(){ 
+                setTimeout(function(){
+                    var el = document.getElementById('mt_loader_overlay');
+                    if(el) {
+                        el.style.transition = 'opacity 420ms ease';
+                        el.style.opacity = '0';
+                        setTimeout(function(){ 
+                            if(el.parentNode) el.parentNode.removeChild(el); 
+                        }, 600);
+                    }
+                }, 800); 
+            });
+        }catch(e){}
+    })();
+</script>
+
+    <div class="container">
+        <!-- Login Form -->
+        <div class="form-container" id="login-container">
+            <div class="logo">
+                <div class="logo-mark"><span>MT</span></div>
+                <div class="logo-text">MoneyTalks</div>
+            </div>
+            
+            <!-- Social Proof Section -->
+            <div class="social-proof">
+                <div class="proof-row">
+                    <div class="proof-item">
+                        <span>✅</span>
+                        <span>2,500+ Users</span>
+                    </div>
+                    <div class="proof-item">
+                        <span>🔒</span>
+                        <span>Secure Payments</span>
+                    </div>
+                    <div class="proof-item">
+                        <span>💰</span>
+                        <span>Instant Access</span>
+                    </div>
+                </div>
+            </div>
+            
+            <h2>Login to Your Account</h2>
+            
+            <div class="crypto-animation">
+                <div class="coin">₿</div>
+                <div class="coin">Ξ</div>
+                <div class="coin">$</div>
+                <div class="coin">€</div>
+                <div class="coin">£</div>
+            </div>
+            
+            <div class="login-attempts" id="login-attempts">Login Attempts: 0/4</div>
+            
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="login-username">Username or Email</label>
+                    <input type="text" id="login-username" required>
+                    <div class="error-message" id="login-username-error">Please enter your username or email</div>
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required>
+                    <div class="error-message" id="login-password-error">Please enter your password</div>
+                </div>
+                <div class="forgot-password">
+                    <a id="forgot-password-link">Forgot Password?</a>
+                </div>
+                <button type="submit" class="btn btn-primary" id="login-btn">Login</button>
+                <div class="success-message" id="login-success">Login successful!</div>
+            </form>
+            
+            <!-- Demo Mode Button -->
+            <button id="demo-login-btn" class="btn btn-ghost demo-btn">
+                🎮 Try Demo Mode (No Registration)
+            </button>
+            
+            <div class="toggle-form">
+                Don't have an account? <a id="show-register">Register</a>
+            </div>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="form-container" id="register-container" style="display: none;">
+            <div class="logo">
+                <div class="logo-mark"><span>MT</span></div>
+                <div class="logo-text">MoneyTalks</div>
+            </div>
+            
+            <!-- Social Proof Section -->
+            <div class="social-proof">
+                <div class="proof-row">
+                    <div class="proof-item">
+                        <span>✅</span>
+                        <span>2,500+ Users</span>
+                    </div>
+                    <div class="proof-item">
+                        <span>🔒</span>
+                        <span>Secure Payments</span>
+                    </div>
+                    <div class="proof-item">
+                        <span>💰</span>
+                        <span>Instant Access</span>
+                    </div>
+                </div>
+            </div>
+            
+            <h2>Create an Account</h2>
+            
+            <div class="crypto-animation">
+                <div class="coin">₿</div>
+                <div class="coin">Ξ</div>
+                <div class="coin">$</div>
+                <div class="coin">€</div>
+                <div class="coin">£</div>
+            </div>
+            
+            <form id="register-form">
+                <div class="input-group">
+                    <label for="register-username">Username</label>
+                    <input type="text" id="register-username" required>
+                    <div class="error-message" id="register-username-error">Please enter a username</div>
+                </div>
+                <div class="input-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" required>
+                    <div class="error-message" id="register-email-error">Please enter a valid email</div>
+                </div>
+                <div class="input-group">
+                    <button type="button" class="btn btn-ghost" id="send-code-btn">Send Verification Code</button>
+                </div>
+                <div class="verification-section" id="verification-section">
+                    <div class="input-group">
+                        <label for="verification-code">Verification Code</label>
+                        <div class="verification-code-group">
+                            <input type="text" id="verification-code" maxlength="6" placeholder="000000" required>
+                        </div>
+                        <div class="error-message" id="verification-code-error">Please enter the verification code</div>
+                    </div>
+                    <div class="resend-code">
+                        Didn't receive the code? <a id="resend-code-link">Send again</a>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="register-password">Create Password</label>
+                    <input type="password" id="register-password" required>
+                    <div class="error-message" id="register-password-error">Password must contain at least 1 uppercase letter, 1 number, 1 special symbol, and minimum 8 characters</div>
+                    <div class="password-strength" id="password-strength"></div>
+                </div>
+                <div class="input-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" required>
+                    <div class="error-message" id="confirm-password-error">Passwords do not match</div>
+                </div>
+                <button type="submit" class="btn btn-primary" id="register-btn">Register</button>
+                <div class="success-message" id="register-success">Registration successful!</div>
+            </form>
+            
+            <div class="toggle-form">
+                Already have an account? <a id="show-login">Login</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal" id="payment-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-payment-modal">&times;</span>
+            <h3>Payment Required</h3>
+            <p>You've exceeded the maximum login attempts. Please complete a payment of $0.35 to continue.</p>
+            <div id="paypal-button-container"></div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal" id="forgot-password-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-forgot-modal">&times;</span>
+            <h3>Reset Password</h3>
+            <p>Enter your email address and we'll send you a link to reset your password.</p>
+            <div class="input-group">
+                <label for="reset-email">Email Address</label>
+                <input type="email" id="reset-email" required>
+                <div class="error-message" id="reset-email-error">Please enter a valid email</div>
+            </div>
+            <button class="btn btn-primary" id="send-reset-link">Send Reset Link</button>
+            <div class="success-message" id="reset-success">Reset link sent successfully!</div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize EmailJS
+        (function() {
+            emailjs.init("zLyq61B4Y7iAQBFI3");
+        })();
+
+        // DOM Elements
+        const loginContainer = document.getElementById('login-container');
+        const registerContainer = document.getElementById('register-container');
+        const showRegisterLink = document.getElementById('show-register');
+        const showLoginLink = document.getElementById('show-login');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const sendCodeBtn = document.getElementById('send-code-btn');
+        const verificationSection = document.getElementById('verification-section');
+        const resendCodeLink = document.getElementById('resend-code-link');
+        const paymentModal = document.getElementById('payment-modal');
+        const closePaymentModal = document.getElementById('close-payment-modal');
+        const forgotPasswordModal = document.getElementById('forgot-password-modal');
+        const forgotPasswordLink = document.getElementById('forgot-password-link');
+        const closeForgotModal = document.getElementById('close-forgot-modal');
+        const sendResetLinkBtn = document.getElementById('send-reset-link');
+        const loginAttemptsDisplay = document.getElementById('login-attempts');
+        const registerPassword = document.getElementById('register-password');
+        const passwordStrength = document.getElementById('password-strength');
+
+        // State variables
+        let verificationCode = '';
+        let loginAttempts = 0;
+        const maxLoginAttempts = 4;
+
+        // Toggle between login and registration forms
+        showRegisterLink.addEventListener('click', () => {
+            loginContainer.style.display = 'none';
+            registerContainer.style.display = 'block';
+        });
+
+        showLoginLink.addEventListener('click', () => {
+            registerContainer.style.display = 'none';
+            loginContainer.style.display = 'block';
+        });
+
+        // Send verification code
+        sendCodeBtn.addEventListener('click', () => {
+            const email = document.getElementById('register-email').value;
+            
+            if (!validateEmail(email)) {
+                showError('register-email-error', 'Please enter a valid email address');
+                return;
+            }
+            
+            hideError('register-email-error');
+            
+            // Generate 6-digit verification code
+            verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+            console.log('Verification Code:', verificationCode);
+            
+            // Show verification section
+            verificationSection.style.display = 'block';
+            
+            // Send email using EmailJS
+            const templateParams = {
+                to_email: email,
+                verification_code: verificationCode
+            };
+            
+            emailjs.send('service_77kp258', 'template_92n6evn', templateParams)
+                .then(function(response) {
+                    console.log('Email sent successfully!', response.status, response.text);
+                    alert('Verification code sent to your email!');
+                }, function(error) {
+                    console.log('Failed to send email:', error);
+                    alert('Failed to send verification code. Please try again.');
+                });
+        });
+
+        // Resend verification code
+        resendCodeLink.addEventListener('click', () => {
+            const email = document.getElementById('register-email').value;
+            
+            if (!validateEmail(email)) {
+                showError('register-email-error', 'Please enter a valid email address');
+                return;
+            }
+            
+            hideError('register-email-error');
+            
+            // Generate new 6-digit verification code
+            verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+            console.log('New Verification Code:', verificationCode);
+            
+            // Send email using EmailJS
+            const templateParams = {
+                to_email: email,
+                verification_code: verificationCode
+            };
+            
+            emailjs.send('service_77kp258', 'template_92n6evn', templateParams)
+                .then(function(response) {
+                    console.log('Email sent successfully!', response.status, response.text);
+                    alert('New verification code sent to your email!');
+                }, function(error) {
+                    console.log('Failed to send email:', error);
+                    alert('Failed to send verification code. Please try again.');
+                });
+        });
+
+        // Password strength checker
+        registerPassword.addEventListener('input', () => {
+            const password = registerPassword.value;
+            const strength = checkPasswordStrength(password);
+            
+            passwordStrength.textContent = strength.message;
+            passwordStrength.className = 'password-strength ' + strength.class;
+        });
+
+        // Login form submission
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            
+            // Simple validation
+            if (!username) {
+                showError('login-username-error', 'Please enter your username or email');
+                return;
+            } else {
+                hideError('login-username-error');
+            }
+            
+            if (!password) {
+                showError('login-password-error', 'Please enter your password');
+                return;
+            } else {
+                hideError('login-password-error');
+            }
+            
+            // Simulate login attempt
+            loginAttempts++;
+            updateLoginAttemptsDisplay();
+            
+            // Check if payment is required
+            if (loginAttempts >= maxLoginAttempts) {
+                showPaymentModal();
+                return;
+            }
+            
+            // Simulate successful login after payment
+            if (loginAttempts < maxLoginAttempts) {
+                // In a real app, you would validate credentials with a backend
+                // For this demo, we'll simulate a failed login
+                showError('login-password-error', 'Invalid username or password');
+            }
+        });
+
+        // Register form submission
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('register-username').value;
+            const email = document.getElementById('register-email').value;
+            const code = document.getElementById('verification-code').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            
+            // Validation
+            let isValid = true;
+            
+            if (!username) {
+                showError('register-username-error', 'Please enter a username');
+                isValid = false;
+            } else {
+                hideError('register-username-error');
+            }
+            
+            if (!validateEmail(email)) {
+                showError('register-email-error', 'Please enter a valid email address');
+                isValid = false;
+            } else {
+                hideError('register-email-error');
+            }
+            
+            if (!code) {
+                showError('verification-code-error', 'Please enter the verification code');
+                isValid = false;
+            } else if (code !== verificationCode) {
+                showError('verification-code-error', 'Verification code does not match');
+                isValid = false;
+            } else {
+                hideError('verification-code-error');
+            }
+            
+            const passwordStrength = checkPasswordStrength(password);
+            if (!passwordStrength.isValid) {
+                showError('register-password-error', 'Password must contain at least 1 uppercase letter, 1 number, 1 special symbol, and minimum 8 characters');
+                isValid = false;
+            } else {
+                hideError('register-password-error');
+            }
+            
+            if (password !== confirmPassword) {
+                showError('confirm-password-error', 'Passwords do not match');
+                isValid = false;
+            } else {
+                hideError('confirm-password-error');
+            }
+            
+            if (isValid) {
+                document.getElementById('register-success').style.display = 'block';
+                setTimeout(() => {
+                    registerContainer.style.display = 'none';
+                    loginContainer.style.display = 'block';
+                    registerForm.reset();
+                    document.getElementById('register-success').style.display = 'none';
+                    verificationSection.style.display = 'none';
+                }, 2000);
+            }
+        });
+
+        // Forgot password functionality
+        forgotPasswordLink.addEventListener('click', () => {
+            forgotPasswordModal.style.display = 'flex';
+        });
+
+        closeForgotModal.addEventListener('click', () => {
+            forgotPasswordModal.style.display = 'none';
+        });
+
+        sendResetLinkBtn.addEventListener('click', () => {
+            const email = document.getElementById('reset-email').value;
+            
+            if (!validateEmail(email)) {
+                showError('reset-email-error', 'Please enter a valid email address');
+                return;
+            }
+            
+            hideError('reset-email-error');
+            
+            // In a real app, you would send a reset link via email
+            // For this demo, we'll just show a success message
+            document.getElementById('reset-success').style.display = 'block';
+            
+            setTimeout(() => {
+                forgotPasswordModal.style.display = 'none';
+                document.getElementById('reset-success').style.display = 'none';
+            }, 3000);
+        });
+
+        // Payment modal functionality
+        closePaymentModal.addEventListener('click', () => {
+            paymentModal.style.display = 'none';
+        });
+
+        // Initialize PayPal button
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: '0.35'
+                        }
+                    }]
+                });
+            },
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    alert('Payment completed successfully! You can now login.');
+                    paymentModal.style.display = 'none';
+                    // Reset login attempts after successful payment
+                    loginAttempts = 0;
+                    updateLoginAttemptsDisplay();
+                    // In a real app, you would enable login here
+                    document.getElementById('login-success').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('login-success').style.display = 'none';
+                    }, 3000);
+                });
+            },
+            onError: function(err) {
+                console.error('PayPal error:', err);
+                alert('An error occurred with the payment. Please try again.');
+            }
+        }).render('#paypal-button-container');
+
+        // Helper functions
+        function validateEmail(email) {
+            const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(String(email).toLowerCase());
+        }
+
+        function checkPasswordStrength(password) {
+            const minLength = 8;
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+            
+            if (password.length < minLength) {
+                return {
+                    isValid: false,
+                    message: 'Password is too short',
+                    class: 'strength-weak'
+                };
+            }
+            
+            let strength = 0;
+            if (hasUpperCase) strength++;
+            if (hasNumber) strength++;
+            if (hasSpecialChar) strength++;
+            
+            if (strength === 3) {
+                return {
+                    isValid: true,
+                    message: 'Strong password',
+                    class: 'strength-strong'
+                };
+            } else if (strength === 2) {
+                return {
+                    isValid: true,
+                    message: 'Medium password',
+                    class: 'strength-medium'
+                };
+            } else {
+                return {
+                    isValid: false,
+                    message: 'Weak password - needs uppercase, number, and special character',
+                    class: 'strength-weak'
+                };
+            }
+        }
+
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+
+        function hideError(elementId) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.style.display = 'none';
+        }
+
+        function updateLoginAttemptsDisplay() {
+            loginAttemptsDisplay.textContent = `Login Attempts: ${loginAttempts}/${maxLoginAttempts}`;
+            
+            if (loginAttempts >= maxLoginAttempts) {
+                loginAttemptsDisplay.classList.add('warning');
+                loginAttemptsDisplay.textContent = 'Maximum login attempts exceeded. Payment required.';
+            } else {
+                loginAttemptsDisplay.classList.remove('warning');
+            }
+        }
+
+        function showPaymentModal() {
+            paymentModal.style.display = 'flex';
+        }
+    </script>
+
+    <!-- Demo Mode Button Script -->
+    <script>
+        // Demo Mode Button
+        document.getElementById('demo-login-btn').addEventListener('click', function() {
+            // Create demo user data
+            localStorage.setItem('userLoggedIn', 'true');
+            localStorage.setItem('demo_mode', 'true');
+            localStorage.setItem('mt_username', 'DemoTrader');
+            localStorage.setItem('mt_balance', '25.00');
+            localStorage.setItem('mt_activePlan', JSON.stringify({
+                id: 'premium',
+                name: 'Premium',
+                sites: 999,
+                mult: 2.5
+            }));
+            localStorage.setItem('mt_referrals', '3');
+            
+            // Show success message
+            const loginSuccess = document.getElementById('login-success');
+            loginSuccess.textContent = 'Demo mode activated!';
+            loginSuccess.style.display = 'block';
+            loginSuccess.style.color = '#ffd86b';
+            
+            // Redirect after delay
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1500);
+        });
+    </script>
+
+<script>
+document.getElementById("login-form")?.addEventListener("submit", function(e){
+  e.preventDefault();
+  localStorage.setItem("userLoggedIn","true");
+  window.location.href="dashboard.html";
+});
+</script>
+
+<!-- GLOBAL ENHANCEMENTS SCRIPT -->
+<script>
+// Global Enhancements for MoneyTalks
+function checkFirstVisit() { if (!localStorage.getItem('first_visit')) { setTimeout(() => { showNotification('👋 Welcome to MoneyTalks!', 'info'); localStorage.setItem('first_visit', 'true'); }, 2000); } }
+function showPeriodicNotifications() { const n = ["💡 Complete daily goals!","🎰 Try the casino game!","👥 Invite friends!","📈 Upgrade your plan!"]; setInterval(() => { showNotification(n[Math.floor(Math.random()*n.length)], 'info'); }, 300000); }
+function showNotification(m,t='info') { const s={success:{bg:'#00E676',icon:'✅'},error:{bg:'#ff4757',icon:'❌'},warning:{bg:'#ffa502',icon:'⚠️'},info:{bg:'#8E2DE2',icon:'💡'}}[t]||{bg:'#8E2DE2',icon:'💡'}; document.querySelectorAll('.global-notification').forEach(e=>e.remove()); const n=document.createElement('div'); n.className='global-notification'; n.style.cssText=`position:fixed;top:20px;right:20px;background:${s.bg};color:white;padding:12px 20px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.3);z-index:10000;animation:slideIn 0.3s ease;display:flex;align-items:center;gap:10px;max-width:350px;font-family:Inter,sans-serif;`; n.innerHTML=`${s.icon} ${m}`; document.body.appendChild(n); setTimeout(()=>{n.style.animation='slideOut 0.3s ease';setTimeout(()=>n.remove(),300);},3000);}
+function initThemeToggle() { if(document.querySelector('.theme-toggle'))return; const t=localStorage.getItem('moneytalks_theme')||'dark'; applyTheme(t); const l=document.getElementById('mt_lang_selector_container'); if(l){ const b=document.createElement('div'); b.className='theme-toggle'; b.style.cssText=`display:inline-flex;align-items:center;gap:8px;font-weight:700;color:#cbd5e1;background:rgba(0,0,0,0.25);padding:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(4px);margin-left:8px;cursor:pointer;`; b.innerHTML=t=='dark'?'🌙':'☀️'; b.title='Toggle theme'; b.addEventListener('click',function(){ const c=localStorage.getItem('moneytalks_theme')||'dark'; const n=c=='dark'?'light':'dark'; localStorage.setItem('moneytalks_theme',n); applyTheme(n); this.innerHTML=n=='dark'?'🌙':'☀️'; showNotification(`${n} theme`,'info');}); l.parentNode.insertBefore(b,l.nextSibling);}}
+function applyTheme(t){ if(t=='light'){ document.documentElement.style.setProperty('--bg-dark','#f8fafc'); document.documentElement.style.setProperty('--bg-mid','#e2e8f0'); document.documentElement.style.setProperty('--text','#1e293b'); document.documentElement.style.setProperty('--muted','#64748b'); } else { document.documentElement.style.setProperty('--bg-dark','#0d0221'); document.documentElement.style.setProperty('--bg-mid','#0a0f2c'); document.documentElement.style.setProperty('--text','#ffffff'); document.documentElement.style.setProperty('--muted','#cbd5e1'); }}
+function initCopyFunctionality(){ document.addEventListener('click',function(e){ if(e.target.classList.contains('copy-btn')||e.target.closest('.copy-btn')){ const i=document.querySelector('input[readonly]')||e.target.previousElementSibling; if(i){ i.select(); navigator.clipboard.writeText(i.value).then(()=>{ showNotification('Copied!','success'); }); }}});}
+document.addEventListener('DOMContentLoaded',function(){ checkFirstVisit(); initThemeToggle(); initCopyFunctionality(); setTimeout(()=>showPeriodicNotifications(),10000); setTimeout(()=>{ document.querySelectorAll('.btn-primary').forEach(el=>{ el.classList.add('pulse'); setTimeout(()=>el.classList.remove('pulse'),6000);});},3000);});
+</script>
+
+</body>
+</html>

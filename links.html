@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MoneyTalks - Earning Links</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+  
+  <!-- GLOBAL CSS -->
+  <style>
+    /* shared.css - Global styles */
+    .btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; position: relative; overflow: hidden; }
+    .btn:active { transform: translateY(2px) !important; }
+    .card { transition: transform 0.3s ease, box-shadow 0.3s ease !important; }
+    .card:hover { transform: translateY(-5px) !important; box-shadow: 0 20px 40px rgba(0,0,0,0.3) !important; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #8E2DE2, #00E676); border-radius: 4px; }
+    ::selection { background: rgba(142, 45, 226, 0.3); color: white; }
+    :focus { outline: 2px solid #8E2DE2; outline-offset: 2px; }
+    .loading-spinner { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1); border-top-color: #8E2DE2; border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .gradient-text { background: linear-gradient(90deg, #8E2DE2, #00E676); -webkit-background-clip: text; background-clip: text; color: transparent; display: inline-block; }
+    .pulse { animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+    .fade-in { animation: fadeIn 0.5s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) { .hide-mobile { display: none !important; } .mobile-stack { flex-direction: column !important; } .mobile-center { text-align: center !important; } }
+    @media print { .no-print { display: none !important; } }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+    [data-tooltip] { position: relative; }
+    [data-tooltip]:hover::after { content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; white-space: nowrap; z-index: 1000; pointer-events: none; }
+  </style>
+  
+  <style>
+    :root {
+      --purple: #8E2DE2;
+      --green: #00E676;
+      --text: #ffffff;
+      --muted: #cbd5e1;
+      --bg-dark: #0d0221;
+      --bg-mid: #0a0f2c;
+      --bg-light: #051f1b;
+    }
+    
+    body {
+      font-family: Inter, system-ui, Segoe UI, Roboto;
+      background: linear-gradient(120deg, #071026, #051f1b);
+      color: #fff;
+      padding: 36px;
+      text-align: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, #8E2DE2, #00E676);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    #desc {
+      color: #cbd5e1;
+      margin-bottom: 30px;
+    }
+    
+    .link-categories {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+    
+    .category-btn {
+      padding: 10px 20px;
+      background: rgba(255,255,255,0.1);
+      color: white;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .category-btn.active {
+      background: #8E2DE2;
+    }
+    
+    .bulk-actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    
+    .bulk-btn {
+      padding: 12px 20px;
+      background: linear-gradient(90deg, #00E676, #8E2DE2);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    #links-wrap {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .link-stats {
+      background: rgba(255,255,255,0.05);
+      padding: 20px;
+      border-radius: 15px;
+      margin-top: 40px;
+      text-align: left;
+    }
+    
+    .link-stats h3 {
+      margin-top: 0;
+    }
+    
+    .link-stats > div {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+  </style>
+</head>
+<body>
+<!-- Language selector -->
+<div id="mt_lang_selector_container" style="position:fixed;top:12px;right:12px;z-index:9999;">
+  <label style="display:inline-flex;align-items:center;gap:8px;font-weight:700;color:#cbd5e1;background:rgba(0,0,0,0.25);padding:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(4px);">
+    <span>🌐</span>
+    <select id="mt_lang_select" style="background:transparent;color:#fff;padding:6px;border-radius:6px;border:0;">
+      <option value="en">EN</option><option value="hi">HI</option><option value="ur">UR</option>
+      <option value="ar">AR</option><option value="zh">ZH</option><option value="ja">JA</option>
+      <option value="ko">KO</option><option value="ru">RU</option><option value="de">DE</option>
+      <option value="es">ES</option><option value="fr">FR</option><option value="tr">TR</option>
+      <option value="pt">PT</option><option value="id">ID</option>
+    </select>
+  </label>
+</div>
+
+<div class="container">
+  <h1>Your Earn Links</h1>
+  <p id="desc">Click a button to open an earning site — links are revealed based on your plan.</p>
+  
+  <!-- Link Categories -->
+  <div class="link-categories">
+    <button class="category-btn active" data-category="all">All Links</button>
+    <button class="category-btn" data-category="faucet">Faucets</button>
+    <button class="category-btn" data-category="ptc">PTC Sites</button>
+    <button class="category-btn" data-category="high">High Paying</button>
+  </div>
+  
+  <!-- Bulk Actions -->
+  <div class="bulk-actions">
+    <button onclick="openAllLinks()" class="bulk-btn">🌐 Open All</button>
+    <button onclick="copyAllLinks()" class="bulk-btn" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);">📋 Copy All URLs</button>
+    <button onclick="refreshLinks()" class="bulk-btn" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);">🔄 Refresh Rotation</button>
+  </div>
+  
+  <!-- Links Container -->
+  <div id="links-wrap"></div>
+  
+  <!-- Link Stats -->
+  <div class="link-stats">
+    <h3>📊 Link Statistics</h3>
+    <div>
+      <div>
+        <strong style="color:#00E676;">Total Links:</strong>
+        <span id="total-links">0</span>
+      </div>
+      <div>
+        <strong style="color:#00E676;">Available:</strong>
+        <span id="available-links">0</span>
+      </div>
+      <div>
+        <strong style="color:#00E676;">Clicked Today:</strong>
+        <span id="clicked-today">0</span>
+      </div>
+      <div>
+        <strong style="color:#00E676;">Estimated Daily:</strong>
+        <span id="estimated-daily">$0.00</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Link data
+const cryptoLinks = [
+  {url:"https://faucetearning.com/?r=6007", category:"faucet", payout:"$0.001-0.01"},
+  {url:"https://earn-trump.com/?ref=oGzRa", category:"ptc", payout:"$0.01-0.05"},
+  {url:"https://viefaucet.com?r=684fe2f354708b256c247d24", category:"faucet", payout:"$0.001-0.02"},
+  {url:"https://bubblix.eu/?r=10450", category:"high", payout:"$0.05-0.20"},
+  {url:"https://ptcwork.xyz?ref=dCH38CiMbQKE", category:"ptc", payout:"$0.01-0.03"},
+  {url:"https://lootizy.com/?r=6863f8ebbec1ddf16595872a", category:"high", payout:"$0.10-0.50"},
+  {url:"https://coinarns.com/?r=22873", category:"faucet", payout:"$0.005-0.02"},
+  {url:"https://cashbux.work/?r=64476", category:"ptc", payout:"$0.02-0.10"},
+  {url:"https://cryptofaucet.one/?ref=saadkhan", category:"faucet", payout:"$0.001-0.01"},
+  {url:"https://firefaucet.win/ref/1423754", category:"faucet", payout:"$0.002-0.015"},
+  {url:"https://earn-pepe.com/?ref=Q6tp", category:"ptc", payout:"$0.01-0.04"},
+  {url:"https://tronstar.top/?r=6032", category:"high", payout:"$0.03-0.15"},
+  {url:"https://bitupdate.info/?r=6061", category:"ptc", payout:"$0.01-0.05"},
+  {url:"https://payup.video/u/3008524", category:"high", payout:"$0.05-0.25"},
+  {url:"https://free-bonk.com/?r=144207", category:"faucet", payout:"$0.001-0.01"},
+  {url:"https://top1faucet.site/?r=2298", category:"faucet", payout:"$0.001-0.02"},
+  {url:"https://ourcoincash.xyz/?r=145379", category:"ptc", payout:"$0.02-0.08"},
+  {url:"https://simplebits.io/ref/p3YjAsIbIoixV7BW_0DUJ", category:"high", payout:"$0.10-1.00"},
+  {url:"https://autofaucet.org/r/Saadq123", category:"faucet", payout:"$0.001-0.01"},
+  {url:"https://aruble.net/?r=gEXlky4ikv", category:"ptc", payout:"$0.01-0.03"},
+  {url:"https://freecash.com/r/JC7VL", category:"high", payout:"$0.50-5.00"}
+];
+
+// Get user plan
+const plan = JSON.parse(localStorage.getItem('mt_activePlan') || 'null');
+const sitesAllowed = plan ? (plan.sites >= 999 ? cryptoLinks.length : plan.sites) : 0;
+const wrap = document.getElementById('links-wrap');
+const categoryBtns = document.querySelectorAll('.category-btn');
+let activeCategory = 'all';
+let availableLinks = [];
+
+// Initialize
+function initLinks() {
+  if(sitesAllowed === 0) {
+    wrap.innerHTML = '<div style="grid-column:1/-1;padding:40px;"><p style="color:#cbd5e1;font-size:18px;">You currently have no sites unlocked.</p><a href="plan.html" style="display:inline-block;margin-top:15px;padding:12px 24px;background:linear-gradient(90deg,#8E2DE2,#00E676);color:white;text-decoration:none;border-radius:999px;font-weight:bold;">Go to Plans to Buy Access</a></div>';
+    return;
+  }
+  
+  // Randomize and select allowed sites
+  const shuffled = [...cryptoLinks].sort(() => Math.random() - 0.5);
+  availableLinks = shuffled.slice(0, sitesAllowed);
+  
+  // Update stats
+  updateStats();
+  
+  // Render links
+  renderLinks();
+  
+  // Setup category filter
+  categoryBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      categoryBtns.forEach(b => b.style.background = 'rgba(255,255,255,0.1)');
+      this.style.background = '#8E2DE2';
+      activeCategory = this.dataset.category;
+      renderLinks();
+    });
+  });
+}
+
+function renderLinks() {
+  wrap.innerHTML = '';
+  
+  const filteredLinks = activeCategory === 'all' 
+    ? availableLinks 
+    : availableLinks.filter(link => link.category === activeCategory);
+  
+  filteredLinks.forEach((link, idx) => {
+    const btn = document.createElement('a');
+    btn.className = 'btn-link';
+    btn.href = link.url;
+    btn.target = '_blank';
+    btn.rel = 'noopener';
+    btn.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      text-decoration: none;
+      color: white;
+      transition: all 0.3s ease;
+      min-height: 100px;
+    `;
+    btn.onmouseover = () => btn.style.transform = 'translateY(-3px)';
+    btn.onmouseout = () => btn.style.transform = 'translateY(0)';
+    btn.onclick = () => trackLinkClick(idx);
+    
+    btn.innerHTML = `
+      <span style="font-size:24px;margin-bottom:8px;">🔗</span>
+      <span style="font-weight:bold;margin-bottom:5px;">Site ${idx + 1}</span>
+      <span style="font-size:12px;color:#00E676;margin-bottom:5px;">${link.payout}</span>
+      <span style="font-size:10px;color:#cbd5e1;background:rgba(0,0,0,0.3);padding:2px 8px;border-radius:10px;">${link.category}</span>
+    `;
+    
+    wrap.appendChild(btn);
+  });
+}
+
+function updateStats() {
+  document.getElementById('total-links').textContent = cryptoLinks.length;
+  document.getElementById('available-links').textContent = availableLinks.length;
+  
+  // Get clicked today from localStorage
+  const today = new Date().toDateString();
+  const clickHistory = JSON.parse(localStorage.getItem('link_clicks') || '{}');
+  const todayClicks = clickHistory[today] || 0;
+  document.getElementById('clicked-today').textContent = todayClicks;
+  
+  // Calculate estimated daily earnings
+  const avgPayout = 0.05; // Average $ per link
+  const estimated = (availableLinks.length * avgPayout).toFixed(2);
+  document.getElementById('estimated-daily').textContent = `$${estimated}`;
+}
+
+function trackLinkClick(index) {
+  const today = new Date().toDateString();
+  const clickHistory = JSON.parse(localStorage.getItem('link_clicks') || '{}');
+  clickHistory[today] = (clickHistory[today] || 0) + 1;
+  localStorage.setItem('link_clicks', JSON.stringify(clickHistory));
+  
+  // Update stats
+  setTimeout(updateStats, 100);
+  
+  // Add small earning
+  const plan = window.MT?.getActivePlan();
+  const mult = plan ? plan.mult : 1;
+  const earned = (0.01 * mult).toFixed(2);
+  window.MT?.addBalance(parseFloat(earned));
+}
+
+// Bulk Actions
+function openAllLinks() {
+  availableLinks.forEach(link => {
+    window.open(link.url, '_blank');
+  });
+  alert(`Opening ${availableLinks.length} links in new tabs!`);
+}
+
+function copyAllLinks() {
+  const urls = availableLinks.map(link => link.url).join('\n');
+  navigator.clipboard.writeText(urls).then(() => {
+    alert(`Copied ${availableLinks.length} URLs to clipboard!`);
+  });
+}
+
+function refreshLinks() {
+  // Reshuffle available links
+  availableLinks = [...availableLinks].sort(() => Math.random() - 0.5);
+  renderLinks();
+  alert('Links refreshed!');
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', initLinks);
+</script>
+
+<footer style="margin-top:40px;padding:18px 12px;text-align:center;color:#9fb0dd;border-top:1px solid rgba(255,255,255,0.03);">
+  <div style="max-width:1000px;margin:0 auto;">
+    <div style="margin-bottom:6px;">© MONEYTALKS • Contact: <a href="mailto:themoneytalks.web@gmail.com" style="color:#9fb0dd;text-decoration:none;">themoneytalks.web@gmail.com</a></div>
+    <div style="display:flex;gap:12px;justify-content:center;font-size:14px;">
+      <a href="about.html" style="color:#9fb0dd;text-decoration:none;">About</a>
+      <a href="policy.html" style="color:#9fb0dd;text-decoration:none;">Policy</a>
+      <a href="faq.html" style="color:#9fb0dd;text-decoration:none;">FAQ</a>
+    </div>
+  </div>
+</footer>
+
+<!-- GLOBAL ENHANCEMENTS SCRIPT -->
+<script>
+// Global Enhancements for MoneyTalks
+function checkFirstVisit() { if (!localStorage.getItem('first_visit')) { setTimeout(() => { showNotification('👋 Welcome to MoneyTalks!', 'info'); localStorage.setItem('first_visit', 'true'); }, 2000); } }
+function showPeriodicNotifications() { const n = ["💡 Complete daily goals!","🎰 Try the casino game!","👥 Invite friends!","📈 Upgrade your plan!"]; setInterval(() => { showNotification(n[Math.floor(Math.random()*n.length)], 'info'); }, 300000); }
+function showNotification(m,t='info') { const s={success:{bg:'#00E676',icon:'✅'},error:{bg:'#ff4757',icon:'❌'},warning:{bg:'#ffa502',icon:'⚠️'},info:{bg:'#8E2DE2',icon:'💡'}}[t]||{bg:'#8E2DE2',icon:'💡'}; document.querySelectorAll('.global-notification').forEach(e=>e.remove()); const n=document.createElement('div'); n.className='global-notification'; n.style.cssText=`position:fixed;top:20px;right:20px;background:${s.bg};color:white;padding:12px 20px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.3);z-index:10000;animation:slideIn 0.3s ease;display:flex;align-items:center;gap:10px;max-width:350px;font-family:Inter,sans-serif;`; n.innerHTML=`${s.icon} ${m}`; document.body.appendChild(n); setTimeout(()=>{n.style.animation='slideOut 0.3s ease';setTimeout(()=>n.remove(),300);},3000);}
+function initThemeToggle() { if(document.querySelector('.theme-toggle'))return; const t=localStorage.getItem('moneytalks_theme')||'dark'; applyTheme(t); const l=document.getElementById('mt_lang_selector_container'); if(l){ const b=document.createElement('div'); b.className='theme-toggle'; b.style.cssText=`display:inline-flex;align-items:center;gap:8px;font-weight:700;color:#cbd5e1;background:rgba(0,0,0,0.25);padding:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(4px);margin-left:8px;cursor:pointer;`; b.innerHTML=t=='dark'?'🌙':'☀️'; b.title='Toggle theme'; b.addEventListener('click',function(){ const c=localStorage.getItem('moneytalks_theme')||'dark'; const n=c=='dark'?'light':'dark'; localStorage.setItem('moneytalks_theme',n); applyTheme(n); this.innerHTML=n=='dark'?'🌙':'☀️'; showNotification(`${n} theme`,'info');}); l.parentNode.insertBefore(b,l.nextSibling);}}
+function applyTheme(t){ if(t=='light'){ document.documentElement.style.setProperty('--bg-dark','#f8fafc'); document.documentElement.style.setProperty('--bg-mid','#e2e8f0'); document.documentElement.style.setProperty('--text','#1e293b'); document.documentElement.style.setProperty('--muted','#64748b'); } else { document.documentElement.style.setProperty('--bg-dark','#0d0221'); document.documentElement.style.setProperty('--bg-mid','#0a0f2c'); document.documentElement.style.setProperty('--text','#ffffff'); document.documentElement.style.setProperty('--muted','#cbd5e1'); }}
+function initCopyFunctionality(){ document.addEventListener('click',function(e){ if(e.target.classList.contains('copy-btn')||e.target.closest('.copy-btn')){ const i=document.querySelector('input[readonly]')||e.target.previousElementSibling; if(i){ i.select(); navigator.clipboard.writeText(i.value).then(()=>{ showNotification('Copied!','success'); }); }}});}
+document.addEventListener('DOMContentLoaded',function(){ checkFirstVisit(); initThemeToggle(); initCopyFunctionality(); setTimeout(()=>showPeriodicNotifications(),10000); setTimeout(()=>{ document.querySelectorAll('.btn-primary').forEach(el=>{ el.classList.add('pulse'); setTimeout(()=>el.classList.remove('pulse'),6000);});},3000);});
+</script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Payment Successful - MoneyTalks</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<!-- GLOBAL CSS -->
+<style>
+  /* shared.css - Global styles */
+  .btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; position: relative; overflow: hidden; }
+  .btn:active { transform: translateY(2px) !important; }
+  .card { transition: transform 0.3s ease, box-shadow 0.3s ease !important; }
+  .card:hover { transform: translateY(-5px) !important; box-shadow: 0 20px 40px rgba(0,0,0,0.3) !important; }
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+  ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #8E2DE2, #00E676); border-radius: 4px; }
+  ::selection { background: rgba(142, 45, 226, 0.3); color: white; }
+  :focus { outline: 2px solid #8E2DE2; outline-offset: 2px; }
+  .loading-spinner { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1); border-top-color: #8E2DE2; border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .gradient-text { background: linear-gradient(90deg, #8E2DE2, #00E676); -webkit-background-clip: text; background-clip: text; color: transparent; display: inline-block; }
+  .pulse { animation: pulse 2s infinite; }
+  @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+  .fade-in { animation: fadeIn 0.5s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @media (max-width: 768px) { .hide-mobile { display: none !important; } .mobile-stack { flex-direction: column !important; } .mobile-center { text-align: center !important; } }
+  @media print { .no-print { display: none !important; } }
+  @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+  [data-tooltip] { position: relative; }
+  [data-tooltip]:hover::after { content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; white-space: nowrap; z-index: 1000; pointer-events: none; }
+</style>
+
+<style>
+body{font-family:Inter,system-ui,Segoe UI,Roboto;background:linear-gradient(120deg,#071026,#051f1b);color:#fff;text-align:center;padding:40px;min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.card{background:rgba(255,255,255,0.03);padding:40px;border-radius:20px;display:inline-block;border:1px solid rgba(142,45,226,0.3);backdrop-filter:blur(10px);max-width:500px;position:relative;z-index:1;}
+.btn-primary{background:linear-gradient(90deg,#ffd86b,#ff8ba3);color:#071026;padding:14px 28px;border-radius:999px;text-decoration:none;font-weight:800;display:inline-block;margin:10px;transition:all 0.3s ease;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(255,216,107,0.3);}
+.btn-secondary{background:transparent;color:#fff;padding:14px 28px;border-radius:999px;text-decoration:none;font-weight:800;display:inline-block;margin:10px;border:2px solid rgba(255,255,255,0.3);transition:all 0.3s ease;}
+.btn-secondary:hover{background:rgba(255,255,255,0.1);}
+@keyframes confetti-fall {0%{transform:translateY(-100px) rotate(0deg);opacity:1;}100%{transform:translateY(100vh) rotate(360deg);opacity:0;}}
+</style></head>
+<body>
+<!-- Confetti Animation -->
+<div id="confetti-container" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;"></div>
+
+<div class="card">
+  <h1 style="font-size:36px;margin-bottom:20px;background:linear-gradient(90deg,#8E2DE2,#00E676);-webkit-background-clip:text;background-clip:text;color:transparent;">🎉 WELCOME TO THE CLUB!</h1>
+  <p style="font-size:18px;margin-bottom:25px;line-height:1.6;">Thank you — your plan has been activated. Welcome to the MoneyTalks family!</p>
+  
+  <div style="font-size:60px;margin:20px 0;animation:bounce 2s infinite;">✨</div>
+  
+  <div class="next-steps" style="background:rgba(255,255,255,0.05);padding:20px;border-radius:15px;margin:25px 0;text-align:left;">
+    <h3 style="margin-top:0;color:#ffd86b;">Here's what to do next:</h3>
+    <ol style="padding-left:20px;">
+      <li style="margin-bottom:10px;"><span style="color:#00E676;">📚</span> Read our <a href="faq.html" style="color:#ffd86b;">Beginner's Guide</a></li>
+      <li style="margin-bottom:10px;"><span style="color:#00E676;">🔗</span> Start earning at <a href="link.html" style="color:#ffd86b;">Your Links</a></li>
+      <li style="margin-bottom:10px;"><span style="color:#00E676;">👥</span> Invite friends for <a href="dashboard.html" style="color:#ffd86b;">Referral Bonuses</a></li>
+      <li><span style="color:#00E676;">🎰</span> Try your luck at the <a href="game.html" style="color:#ffd86b;">Casino Game</a></li>
+    </ol>
+  </div>
+  
+  <div style="margin-top:30px;">
+    <a href="link.html" class="btn-primary">🚀 Go to Your Links</a>
+    <a href="dashboard.html" class="btn-secondary">📊 Go to Dashboard</a>
+  </div>
+  
+  <div style="margin-top:25px;font-size:14px;color:#cbd5e1;">
+    Need help? <a href="mailto:themoneytalks.web@gmail.com" style="color:#ffd86b;">Contact Support</a>
+  </div>
+</div>
+
+<script>
+// Confetti effect
+function createConfetti() {
+  const colors = ['#8E2DE2', '#00E676', '#ffd86b', '#ff8ba3', '#4776E6'];
+  const container = document.getElementById('confetti-container');
+  
+  for(let i = 0; i < 100; i++) {
+    const confetti = document.createElement('div');
+    confetti.style.cssText = `
+      position: absolute;
+      width: ${Math.random() * 10 + 5}px;
+      height: ${Math.random() * 10 + 5}px;
+      background: ${colors[Math.floor(Math.random() * colors.length)]};
+      top: -20px;
+      left: ${Math.random() * 100}%;
+      border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+      animation: confetti-fall ${Math.random() * 5 + 3}s linear ${Math.random() * 2}s infinite;
+    `;
+    container.appendChild(confetti);
+  }
+}
+
+// Add bounce animation
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+`;
+document.head.appendChild(style);
+
+// Initialize
+createConfetti();
+
+// Store purchase info
+const params = new URLSearchParams(location.search);
+const plan = params.get('plan');
+if(plan) {
+  localStorage.setItem('mt_lastPurchasedPlan', plan);
+  
+  // Update active plan
+  const plans = {
+    basic: { id:'basic', name:'Basic', sites:1, mult:1 },
+    starter: { id:'starter', name:'Starter', sites:2, mult:1.2 },
+    standard: { id:'standard', name:'Standard', sites:6, mult:1.5 },
+    advanced: { id:'advanced', name:'Advanced', sites:12, mult:2 },
+    premium: { id:'premium', name:'Premium', sites:999, mult:2.5 },
+    gold: { id:'gold', name:'Gold+All', sites:999, mult:3 }
+  };
+  
+  if(plans[plan]) {
+    localStorage.setItem('mt_activePlan', JSON.stringify(plans[plan]));
+  }
+}
+
+// Auto redirect after 30 seconds
+setTimeout(() => {
+  if(!localStorage.getItem('redirected_from_success')) {
+    window.location.href = 'dashboard.html';
+  }
+}, 30000);
+</script>
+
+<footer style="position:absolute;bottom:0;left:0;right:0;padding:18px 12px;text-align:center;color:#9fb0dd;border-top:1px solid rgba(255,255,255,0.03);">
+  <div style="max-width:1000px;margin:0 auto;">
+    <div style="margin-bottom:6px;">© MONEYTALKS • Contact: <a href="mailto:themoneytalks.web@gmail.com" style="color:#9fb0dd;text-decoration:none;">themoneytalks.web@gmail.com</a></div>
+    <div style="display:flex;gap:12px;justify-content:center;font-size:14px;">
+      <a href="about.html" style="color:#9fb0dd;text-decoration:none;">About</a>
+      <a href="policy.html" style="color:#9fb0dd;text-decoration:none;">Policy</a>
+      <a href="faq.html" style="color:#9fb0dd;text-decoration:none;">FAQ</a>
+    </div>
+  </div>
+</footer>
+
+<!-- GLOBAL ENHANCEMENTS SCRIPT -->
+<script>
+// Global Enhancements for MoneyTalks
+function checkFirstVisit() { if (!localStorage.getItem('first_visit')) { setTimeout(() => { showNotification('👋 Welcome to MoneyTalks!', 'info'); localStorage.setItem('first_visit', 'true'); }, 2000); } }
+function showPeriodicNotifications() { const n = ["💡 Complete daily goals!","🎰 Try the casino game!","👥 Invite friends!","📈 Upgrade your plan!"]; setInterval(() => { showNotification(n[Math.floor(Math.random()*n.length)], 'info'); }, 300000); }
+function showNotification(m,t='info') { const s={success:{bg:'#00E676',icon:'✅'},error:{bg:'#ff4757',icon:'❌'},warning:{bg:'#ffa502',icon:'⚠️'},info:{bg:'#8E2DE2',icon:'💡'}}[t]||{bg:'#8E2DE2',icon:'💡'}; document.querySelectorAll('.global-notification').forEach(e=>e.remove()); const n=document.createElement('div'); n.className='global-notification'; n.style.cssText=`position:fixed;top:20px;right:20px;background:${s.bg};color:white;padding:12px 20px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.3);z-index:10000;animation:slideIn 0.3s ease;display:flex;align-items:center;gap:10px;max-width:350px;font-family:Inter,sans-serif;`; n.innerHTML=`${s.icon} ${m}`; document.body.appendChild(n); setTimeout(()=>{n.style.animation='slideOut 0.3s ease';setTimeout(()=>n.remove(),300);},3000);}
+function initThemeToggle() { if(document.querySelector('.theme-toggle'))return; const t=localStorage.getItem('moneytalks_theme')||'dark'; applyTheme(t); const l=document.getElementById('mt_lang_selector_container'); if(l){ const b=document.createElement('div'); b.className='theme-toggle'; b.style.cssText=`display:inline-flex;align-items:center;gap:8px;font-weight:700;color:#cbd5e1;background:rgba(0,0,0,0.25);padding:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(4px);margin-left:8px;cursor:pointer;`; b.innerHTML=t=='dark'?'🌙':'☀️'; b.title='Toggle theme'; b.addEventListener('click',function(){ const c=localStorage.getItem('moneytalks_theme')||'dark'; const n=c=='dark'?'light':'dark'; localStorage.setItem('moneytalks_theme',n); applyTheme(n); this.innerHTML=n=='dark'?'🌙':'☀️'; showNotification(`${n} theme`,'info');}); l.parentNode.insertBefore(b,l.nextSibling);}}
+function applyTheme(t){ if(t=='light'){ document.documentElement.style.setProperty('--bg-dark','#f8fafc'); document.documentElement.style.setProperty('--bg-mid','#e2e8f0'); document.documentElement.style.setProperty('--text','#1e293b'); document.documentElement.style.setProperty('--muted','#64748b'); } else { document.documentElement.style.setProperty('--bg-dark','#0d0221'); document.documentElement.style.setProperty('--bg-mid','#0a0f2c'); document.documentElement.style.setProperty('--text','#ffffff'); document.documentElement.style.setProperty('--muted','#cbd5e1'); }}
+function initCopyFunctionality(){ document.addEventListener('click',function(e){ if(e.target.classList.contains('copy-btn')||e.target.closest('.copy-btn')){ const i=document.querySelector('input[readonly]')||e.target.previousElementSibling; if(i){ i.select(); navigator.clipboard.writeText(i.value).then(()=>{ showNotification('Copied!','success'); }); }}});}
+document.addEventListener('DOMContentLoaded',function(){ checkFirstVisit(); initThemeToggle(); initCopyFunctionality(); setTimeout(()=>showPeriodicNotifications(),10000); setTimeout(()=>{ document.querySelectorAll('.btn-primary').forEach(el=>{ el.classList.add('pulse'); setTimeout(()=>el.classList.remove('pulse'),6000);});},3000);});
+</script>
+</body>
+</html>
