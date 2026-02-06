@@ -1,0 +1,949 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Plans - MoneyTalks</title>
+  <meta name="description" content="Choose your MoneyTalks plan to unlock earning sites. Payments processed securely by PayPal or Razorpay." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <script src="https://www.paypal.com/sdk/js?client-id=AXMTfOoz5WNRdOjT2blrlrxEZd7OPtKWAFDC_IdSfwD5OmkqoP2eyJrshBStJhkOHdh6ShcRWt5Xz8ow&currency=USD"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  
+  <!-- GLOBAL CSS -->
+  <style>
+    /* shared.css - Global styles */
+    .btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; position: relative; overflow: hidden; }
+    .btn:active { transform: translateY(2px) !important; }
+    .card { transition: transform 0.3s ease, box-shadow 0.3s ease !important; }
+    .card:hover { transform: translateY(-5px) !important; box-shadow: 0 20px 40px rgba(0,0,0,0.3) !important; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #8E2DE2, #00E676); border-radius: 4px; }
+    ::selection { background: rgba(142, 45, 226, 0.3); color: white; }
+    :focus { outline: 2px solid #8E2DE2; outline-offset: 2px; }
+    .loading-spinner { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1); border-top-color: #8E2DE2; border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .gradient-text { background: linear-gradient(90deg, #8E2DE2, #00E676); -webkit-background-clip: text; background-clip: text; color: transparent; display: inline-block; }
+    .pulse { animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+    .fade-in { animation: fadeIn 0.5s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) { .hide-mobile { display: none !important; } .mobile-stack { flex-direction: column !important; } .mobile-center { text-align: center !important; } }
+    @media print { .no-print { display: none !important; } }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+    [data-tooltip] { position: relative; }
+    [data-tooltip]:hover::after { content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; white-space: nowrap; z-index: 1000; pointer-events: none; }
+  </style>
+  
+  <style>
+    :root{
+      --purple:#8E2DE2;
+      --green:#00E676;
+      --text:#ffffff;
+      --muted:#cbd5e1;
+      --overlay:rgba(0,0,0,.35);
+      --btn-blue:#eaf2ff;
+      --btn-blue-border:#c7dbff;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--text);
+      font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+      background:
+        radial-gradient(1200px 600px at 80% -10%, rgba(142,45,226,.28), transparent 60%),
+        radial-gradient(1000px 600px at -10% 90%, rgba(0,230,118,.25), transparent 60%),
+        linear-gradient(120deg, #0d0221 0%, #0a0f2c 35%, #051f1b 100%);
+      overflow-x: hidden;
+      padding: 24px;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .plans-header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 20px 0;
+      position: relative;
+    }
+
+    .logo{ 
+      display:inline-flex; 
+      align-items:center; 
+      gap:12px; 
+      margin-bottom:24px;
+    }
+    .logo-mark{ 
+      width:50px; 
+      height:50px; 
+      border-radius:14px; 
+      display:grid; 
+      place-items:center; 
+      position:relative; 
+      overflow:hidden;
+      background: conic-gradient(from 180deg, var(--purple), var(--green) 60%, var(--purple));
+      box-shadow: 0 12px 28px rgba(0,230,118,.22), 0 10px 26px rgba(142,45,226,.22);
+    }
+    .logo-mark span{ font-weight:900; font-size:18px; letter-spacing:1px; color:#fff; text-shadow:0 2px 8px rgba(0,0,0,.5) }
+    .logo-text{ 
+      font-weight:900; 
+      font-size:24px; 
+      letter-spacing:.12em; 
+      text-transform:uppercase;
+      background: linear-gradient(90deg, var(--purple), var(--green)); 
+      -webkit-background-clip:text; 
+      background-clip:text; 
+      color:transparent; 
+    }
+
+    h1 {
+      font-size: clamp(36px, 5vw, 60px);
+      margin: 10px 0;
+      font-weight: 900;
+      letter-spacing: .06em;
+      background: linear-gradient(90deg, var(--purple), var(--green));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      font-size: clamp(14px, 2vw, 18px);
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto 30px;
+      line-height: 1.6;
+    }
+
+    /* Plans Grid */
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto 50px;
+    }
+
+    .plan-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .plan-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      border-color: rgba(142, 45, 226, 0.3);
+    }
+
+    .plan-card.popular {
+      border: 2px solid var(--green);
+      background: rgba(0, 230, 118, 0.05);
+    }
+
+    .popular-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--green);
+      color: #000;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .plan-name {
+      font-size: 24px;
+      font-weight: 800;
+      margin: 0 0 10px;
+      color: #fff;
+    }
+
+    .plan-price {
+      font-size: 42px;
+      font-weight: 900;
+      margin: 15px 0;
+      background: linear-gradient(90deg, #ffd86b, #ff8ba3);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .plan-features {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0;
+      color: var(--muted);
+    }
+
+    .plan-features li {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .plan-features li:before {
+      content: "✓";
+      color: var(--green);
+      font-weight: bold;
+    }
+
+    /* Payment Options */
+    .payment-options {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .payment-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .razorpay-btn {
+      background: linear-gradient(90deg, #38bdf8, #0ea5e9) !important;
+      border: none !important;
+      color: white !important;
+      font-weight: 800 !important;
+    }
+
+    .btn {
+      --radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .6rem;
+      padding: 14px 22px;
+      border-radius: var(--radius);
+      text-decoration: none;
+      font-weight: 800;
+      border: 1px solid transparent;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(180deg, #ffffff, var(--btn-blue));
+      color: #0b3b8d;
+      border-color: var(--btn-blue-border);
+      box-shadow: 0 12px 24px rgba(13,59,141,.25), 0 3px 8px rgba(13,59,141,.25);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+    }
+
+    /* Feature Comparison Table */
+    .comparison-section {
+      max-width: 1200px;
+      margin: 60px auto;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .comparison-section h3 {
+      text-align: center;
+      font-size: 28px;
+      margin: 0 0 30px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    .comparison-table th {
+      background: rgba(142, 45, 226, 0.2);
+      padding: 18px;
+      text-align: left;
+      font-weight: 800;
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .comparison-table td {
+      padding: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--muted);
+    }
+
+    .comparison-table tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .comparison-table tr:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Deal Timer */
+    .deal-timer {
+      background: linear-gradient(90deg, #ff4757, #ff6b81);
+      padding: 25px;
+      border-radius: 20px;
+      margin: 40px auto;
+      max-width: 600px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 15px 30px rgba(255, 71, 87, 0.3);
+    }
+
+    .deal-timer h4 {
+      margin: 0 0 10px 0;
+      color: white;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .deal-timer p {
+      margin: 0 0 15px 0;
+      color: white;
+      font-size: 16px;
+    }
+
+    .timer {
+      font-size: 42px;
+      font-weight: bold;
+      color: white;
+      font-family: monospace;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    /* Country Detection */
+    .country-banner {
+      background: linear-gradient(90deg, #0ea5e9, #38bdf8);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      text-align: center;
+      display: none;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .country-badge {
+      display: inline-block;
+      background: rgba(56, 189, 248, 0.2);
+      color: #38bdf8;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-left: 10px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: 60px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--green);
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 16px;
+      }
+      
+      .plans-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .comparison-section {
+        padding: 20px;
+        overflow-x: auto;
+      }
+      
+      .comparison-table {
+        min-width: 600px;
+      }
+      
+      .deal-timer {
+        margin: 30px 0;
+      }
+      
+      .timer {
+        font-size: 32px;
+      }
+    }
+
+    /* Animation classes */
+    .animate {
+      animation: fadeIn 0.8s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+<!-- Language selector (fixed top-right) -->
+<div id="mt_lang_selector_container" style="position:fixed;top:12px;right:12px;z-index:9999;font-family:Inter,system-ui,Segoe UI,Roboto;">
+  <label style="display:inline-flex;align-items:center;gap:8px;font-weight:700;color:#cbd5e1;background:rgba(0,0,0,0.25);padding:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(4px);">
+    <span>🌐</span>
+    <select id="mt_lang_select" style="background:transparent;color:#fff;padding:6px;border-radius:6px;border:0;">
+      <option value="en">EN</option><option value="hi">HI</option><option value="ur">UR</option>
+      <option value="ar">AR</option><option value="zh">ZH</option><option value="ja">JA</option>
+      <option value="ko">KO</option><option value="ru">RU</option><option value="de">DE</option>
+      <option value="es">ES</option><option value="fr">FR</option><option value="tr">TR</option>
+      <option value="pt">PT</option><option value="id">ID</option>
+    </select>
+  </label>
+</div>
+
+<!-- MONEYTALKS Loader -->
+<style id="mt_loader_style">
+#mt_loader_overlay{position:fixed;inset:0;background:linear-gradient(120deg,#071026,#051f1b);display:flex;align-items:center;justify-content:center;z-index:100000;color:#fff}
+#mt_loader_box{display:flex;flex-direction:column;align-items:center;gap:12px}
+#mt_loader_logo{font-weight:900;font-size:34px;letter-spacing:4px;color:#ffd86b;text-shadow:0 4px 30px rgba(255,220,107,0.12);opacity:0;transform:translateY(6px);transition:all 600ms ease}
+#mt_loader_sub{color:#cbd5e1;opacity:0;transform:translateY(6px);transition:all 600ms ease 200ms;font-size:14px}
+.mt_loader_show #mt_loader_logo, .mt_loader_show #mt_loader_sub{opacity:1;transform:translateY(0)}
+</style>
+<div id="mt_loader_overlay"><div id="mt_loader_box"><div id="mt_loader_logo">MONEYTALKS</div><div id="mt_loader_sub">Welcome — preparing your experience</div></div></div>
+<script>
+(function(){
+  try{
+    document.documentElement.classList.add('mt_loader_show');
+    window.addEventListener('load', function(){ setTimeout(hideLoader, 800); });
+    function hideLoader(){
+      var el = document.getElementById('mt_loader_overlay');
+      if(!el) return;
+      el.style.transition = 'opacity 420ms ease';
+      el.style.opacity = '0';
+      setTimeout(function(){ el.parentNode && el.parentNode.removeChild(el); }, 600);
+    }
+    setTimeout(hideLoader, 3000);
+  }catch(e){}
+})();
+</script>
+<!-- end loader -->
+
+<div class="plans-header">
+  <div class="logo" aria-label="MoneyTalks logo">
+    <div class="logo-mark" aria-hidden="true"><span>MT</span></div>
+    <div class="logo-text">MoneyTalks</div>
+  </div>
+  
+  <h1>Choose Your Plan</h1>
+  <p class="subtitle">Unlock premium earning sites and maximize your cryptocurrency earnings. Select the perfect plan for your goals.</p>
+</div>
+
+<!-- Country Detection Banner -->
+<div id="country-banner" class="country-banner">
+  <span id="country-message">🇮🇳 Detected: India - Showing prices in INR</span>
+</div>
+
+<div class="plans-grid">
+  <!-- Basic Plan -->
+  <div class="plan-card animate">
+    <div class="plan-name">Basic</div>
+    <div class="plan-price" id="price-basic">$1.50</div>
+    <p style="color: var(--muted); margin: 10px 0 20px;">Unlock 1 site (rotational)</p>
+    
+    <ul class="plan-features">
+      <li>1 Premium Earning Site</li>
+      <li>Daily Rotational Access</li>
+      <li>Basic Support</li>
+      <li>1x Earning Multiplier</li>
+    </ul>
+    
+    <div class="payment-options">
+      <div id="paypal-section-basic">
+        <div class="payment-label">International Payment</div>
+        <div id="paypal-basic"></div>
+      </div>
+      <div id="razorpay-section-basic" class="hidden">
+        <div class="payment-label">Indian Payment</div>
+        <button class="btn razorpay-btn" onclick="startRazorpay('Basic', 125, 'basic')">Pay ₹125</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Starter Plan -->
+  <div class="plan-card animate">
+    <div class="plan-name">Starter</div>
+    <div class="plan-price" id="price-starter">$2.90</div>
+    <p style="color: var(--muted); margin: 10px 0 20px;">Unlock 2 sites</p>
+    
+    <ul class="plan-features">
+      <li>2 Premium Earning Sites</li>
+      <li>24/7 Access</li>
+      <li>Email Support</li>
+      <li>1.2x Earning Multiplier</li>
+    </ul>
+    
+    <div class="payment-options">
+      <div id="paypal-section-starter">
+        <div class="payment-label">International Payment</div>
+        <div id="paypal-starter"></div>
+      </div>
+      <div id="razorpay-section-starter" class="hidden">
+        <div class="payment-label">Indian Payment</div>
+        <button class="btn razorpay-btn" onclick="startRazorpay('Starter', 242, 'starter')">Pay ₹242</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Standard Plan -->
+  <div class="plan-card animate popular">
+    <div class="popular-badge">Most Popular</div>
+    <div class="plan-name">Standard</div>
+    <div class="plan-price" id="price-standard">$8.20</div>
+    <p style="color: var(--muted); margin: 10px 0 20px;">Unlock 6 sites</p>
+    
+    <ul class="plan-features">
+      <li>6 Premium Earning Sites</li>
+      <li>Priority Access</li>
+      <li>Priority Support</li>
+      <li>1.5x Earning Multiplier</li>
+      <li>20% Referral Bonus</li>
+    </ul>
+    
+    <div class="payment-options">
+      <div id="paypal-section-standard">
+        <div class="payment-label">International Payment</div>
+        <div id="paypal-standard"></div>
+      </div>
+      <div id="razorpay-section-standard" class="hidden">
+        <div class="payment-label">Indian Payment</div>
+        <button class="btn razorpay-btn" onclick="startRazorpay('Standard', 683, 'standard')">Pay ₹683</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Advanced Plan -->
+  <div class="plan-card animate">
+    <div class="plan-name">Advanced</div>
+    <div class="plan-price" id="price-advanced">$14.00</div>
+    <p style="color: var(--muted); margin: 10px 0 20px;">Unlock 12 sites</p>
+    
+    <ul class="plan-features">
+      <li>12 Premium Earning Sites</li>
+      <li>VIP Access</li>
+      <li>24/7 Priority Support</li>
+      <li>2x Earning Multiplier</li>
+      <li>30% Referral Bonus</li>
+      <li>Daily Game Spins</li>
+    </ul>
+    
+    <div class="payment-options">
+      <div id="paypal-section-advanced">
+        <div class="payment-label">International Payment</div>
+        <div id="paypal-advanced"></div>
+      </div>
+      <div id="razorpay-section-advanced" class="hidden">
+        <div class="payment-label">Indian Payment</div>
+        <button class="btn razorpay-btn" onclick="startRazorpay('Advanced', 1167, 'advanced')">Pay ₹1,167</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Premium Plan -->
+  <div class="plan-card animate">
+    <div class="plan-name">Premium</div>
+    <div class="plan-price" id="price-premium">$25.00</div>
+    <p style="color: var(--muted); margin: 10px 0 20px;">Unlock all sites</p>
+    
+    <ul class="plan-features">
+      <li>All Earning Sites (40+)</li>
+      <li>Unlimited Access</li>
+      <li>VIP Support</li>
+      <li>2.5x Earning Multiplier</li>
+      <li>40% Referral Bonus</li>
+      <li>Unlimited Game Spins</li>
+      <li>Early Access to New Sites</li>
+    </ul>
+    
+    <div class="payment-options">
+      <div id="paypal-section-premium">
+        <div class="payment-label">International Payment</div>
+        <div id="paypal-premium"></div>
+      </div>
+      <div id="razorpay-section-premium" class="hidden">
+        <div class="payment-label">Indian Payment</div>
+        <button class="btn razorpay-btn" onclick="startRazorpay('Premium', 2083, 'premium')">Pay ₹2,083</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gold + All Plan -->
+  <div class="plan-card animate">
+    <div class="plan-name">Gold + All</div>
+    <div class="plan-price" id="price-gold">$50.00</div>
+    <p style="color: var(--muted); margin: 10px 0 20px;">All links + Gold bonus</p>
+    
+    <ul class="plan-features">
+      <li>All Sites + Gold Access</li>
+      <li>Lifetime Updates</li>
+      <li>24/7 VIP Support</li>
+      <li>3x Earning Multiplier</li>
+      <li>50% Referral Bonus</li>
+      <li>Unlimited Game Spins</li>
+      <li>Gold Badge Profile</li>
+      <li>Personal Account Manager</li>
+    </ul>
+    
+    <div class="payment-options">
+      <div id="paypal-section-gold">
+        <div class="payment-label">International Payment</div>
+        <div id="paypal-gold"></div>
+      </div>
+      <div id="razorpay-section-gold" class="hidden">
+        <div class="payment-label">Indian Payment</div>
+        <button class="btn razorpay-btn" onclick="startRazorpay('Gold+All', 4167, 'gold')">Pay ₹4,167</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Feature Comparison Table -->
+<div class="comparison-section animate">
+  <h3>📊 Feature Comparison</h3>
+  <table class="comparison-table">
+    <tr>
+      <th>Feature</th>
+      <th style="text-align: center;">Basic</th>
+      <th style="text-align: center;">Standard</th>
+      <th style="text-align: center;">Premium</th>
+      <th style="text-align: center;">Gold</th>
+    </tr>
+    <tr>
+      <td>Earning Sites</td>
+      <td style="text-align: center;">1</td>
+      <td style="text-align: center; background: rgba(0,230,118,0.1);">6</td>
+      <td style="text-align: center; background: rgba(142,45,226,0.1);">40+</td>
+      <td style="text-align: center; background: rgba(255,216,107,0.1);">40+</td>
+    </tr>
+    <tr>
+      <td>Earning Multiplier</td>
+      <td style="text-align: center;">1x</td>
+      <td style="text-align: center; background: rgba(0,230,118,0.1);">1.5x</td>
+      <td style="text-align: center; background: rgba(142,45,226,0.1);">2.5x</td>
+      <td style="text-align: center; background: rgba(255,216,107,0.1);">3x</td>
+    </tr>
+    <tr>
+      <td>Referral Bonus</td>
+      <td style="text-align: center;">10%</td>
+      <td style="text-align: center; background: rgba(0,230,118,0.1);">20%</td>
+      <td style="text-align: center; background: rgba(142,45,226,0.1);">40%</td>
+      <td style="text-align: center; background: rgba(255,216,107,0.1);">50%</td>
+    </tr>
+    <tr>
+      <td>Support</td>
+      <td style="text-align: center;">Basic</td>
+      <td style="text-align: center; background: rgba(0,230,118,0.1);">Priority</td>
+      <td style="text-align: center; background: rgba(142,45,226,0.1);">VIP</td>
+      <td style="text-align: center; background: rgba(255,216,107,0.1);">24/7 VIP</td>
+    </tr>
+    <tr>
+      <td>Game Spins</td>
+      <td style="text-align: center;">-</td>
+      <td style="text-align: center; background: rgba(0,230,118,0.1);">3/day</td>
+      <td style="text-align: center; background: rgba(142,45,226,0.1);">Unlimited</td>
+      <td style="text-align: center; background: rgba(255,216,107,0.1);">Unlimited</td>
+    </tr>
+    <tr>
+      <td>Access Type</td>
+      <td style="text-align: center;">Rotational</td>
+      <td style="text-align: center; background: rgba(0,230,118,0.1);">24/7</td>
+      <td style="text-align: center; background: rgba(142,45,226,0.1);">24/7</td>
+      <td style="text-align: center; background: rgba(255,216,107,0.1);">24/7 VIP</td>
+    </tr>
+  </table>
+</div>
+
+<!-- Deal Timer -->
+<div class="deal-timer animate">
+  <h4>🔥 LIMITED TIME OFFER</h4>
+  <p>Gold Plan 30% OFF for next:</p>
+  <div class="timer" id="deal-timer">23:59:59</div>
+</div>
+
+<script>
+// Deal Timer
+function updateDealTimer() {
+  const now = new Date();
+  const endOfDay = new Date();
+  endOfDay.setHours(23, 59, 59, 999);
+  
+  const diff = endOfDay - now;
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+  
+  document.getElementById('deal-timer').textContent = 
+    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
+setInterval(updateDealTimer, 1000);
+updateDealTimer();
+
+// Country Detection and Pricing
+function detectCountry() {
+  // Check localStorage for cached country
+  const cachedCountry = localStorage.getItem('mt_user_country');
+  if (cachedCountry) {
+    updateUIForCountry(cachedCountry);
+    return;
+  }
+  
+  // Fallback to IP detection
+  fetch('https://ipapi.co/json/')
+    .then(response => response.json())
+    .then(data => {
+      const country = data.country_code;
+      localStorage.setItem('mt_user_country', country);
+      updateUIForCountry(country);
+    })
+    .catch(error => {
+      console.log('Country detection failed, defaulting to International');
+      updateUIForCountry('INT');
+    });
+}
+
+function updateUIForCountry(countryCode) {
+  const isIndia = countryCode === 'IN';
+  const banner = document.getElementById('country-banner');
+  const message = document.getElementById('country-message');
+  
+  if (isIndia) {
+    // Show INR prices and Razorpay
+    document.getElementById('price-basic').textContent = '₹125';
+    document.getElementById('price-starter').textContent = '₹242';
+    document.getElementById('price-standard').textContent = '₹683';
+    document.getElementById('price-advanced').textContent = '₹1,167';
+    document.getElementById('price-premium').textContent = '₹2,083';
+    document.getElementById('price-gold').textContent = '₹4,167';
+    
+    // Show Razorpay, hide PayPal
+    document.querySelectorAll('[id^="razorpay-section-"]').forEach(el => el.classList.remove('hidden'));
+    document.querySelectorAll('[id^="paypal-section-"]').forEach(el => el.classList.add('hidden'));
+    
+    // Update banner
+    banner.style.display = 'block';
+    message.innerHTML = '🇮🇳 Detected: India - Showing prices in INR (Razorpay)';
+    
+    // Add country badge to title
+    document.querySelector('h1').innerHTML = 'Choose Your Plan <span class="country-badge">India</span>';
+  } else {
+    // Show USD prices and PayPal
+    document.getElementById('price-basic').textContent = '$1.50';
+    document.getElementById('price-starter').textContent = '$2.90';
+    document.getElementById('price-standard').textContent = '$8.20';
+    document.getElementById('price-advanced').textContent = '$14.00';
+    document.getElementById('price-premium').textContent = '$25.00';
+    document.getElementById('price-gold').textContent = '$50.00';
+    
+    // Show PayPal, hide Razorpay
+    document.querySelectorAll('[id^="paypal-section-"]').forEach(el => el.classList.remove('hidden'));
+    document.querySelectorAll('[id^="razorpay-section-"]').forEach(el => el.classList.add('hidden'));
+    
+    // Update banner for international
+    if (countryCode && countryCode !== 'INT') {
+      const countryName = getCountryName(countryCode);
+      banner.style.display = 'block';
+      message.innerHTML = `🌍 Detected: ${countryName} - Showing prices in USD (PayPal)`;
+      banner.style.background = 'linear-gradient(90deg, var(--purple), var(--green))';
+      
+      // Add country badge to title
+      document.querySelector('h1').innerHTML = `Choose Your Plan <span class="country-badge">${countryName}</span>`;
+    }
+  }
+}
+
+function getCountryName(code) {
+  const countries = {
+    'US': 'USA', 'GB': 'UK', 'CA': 'Canada',
+    'AU': 'Australia', 'DE': 'Germany', 'FR': 'France',
+    'ES': 'Spain', 'IT': 'Italy', 'JP': 'Japan',
+    'KR': 'Korea', 'SG': 'Singapore', 'AE': 'UAE',
+    'SA': 'Saudi', 'PK': 'Pakistan', 'BD': 'Bangladesh'
+  };
+  return countries[code] || 'International';
+}
+
+function startRazorpay(planName, amountInINR, planId) {
+  var options = {
+    key: "rzp_test_SCYXm6xGDvO1hj",
+    amount: amountInINR * 100,
+    currency: "INR",
+    name: "MoneyTalks",
+    description: planName + " Plan",
+    handler: function (response) {
+      var plan = MT_PLANS[planId];
+      if (plan) {
+        activatePlanClient(plan);
+      }
+      window.location.href = "success.html?plan=" + planId + "&payment=razorpay";
+    },
+    prefill: {
+      name: "",
+      email: "",
+      contact: ""
+    },
+    theme: {
+      color: "#0ea5e9"
+    }
+  };
+
+  var rzp = new Razorpay(options);
+  rzp.open();
+}
+
+// Run country detection when page loads
+document.addEventListener('DOMContentLoaded', detectCountry);
+
+// Animate cards on load
+document.addEventListener('DOMContentLoaded', function() {
+  const cards = document.querySelectorAll('.animate');
+  cards.forEach((card, index) => {
+    setTimeout(() => {
+      card.style.opacity = '1';
+      card.style.transform = 'translateY(0)';
+    }, index * 100);
+  });
+});
+</script>
+
+<script>
+var MT_PLANS = {
+  basic:    { id:'basic',    price:'1.50', sites:1,  name:'Basic' },
+  starter:  { id:'starter',  price:'2.90', sites:2,  name:'Starter' },
+  standard: { id:'standard', price:'8.20', sites:6,  name:'Standard' },
+  advanced: { id:'advanced', price:'14.00',sites:12, name:'Advanced' },
+  premium:  { id:'premium',  price:'25.00',sites:999,name:'Premium' },
+  gold:     { id:'gold',     price:'50.00',sites:999,name:'Gold+All' }
+};
+
+function activatePlanClient(plan){ 
+  localStorage.setItem('mt_activePlan', JSON.stringify(plan)); 
+  localStorage.setItem('mt_lastPayment', JSON.stringify({plan:plan, time:Date.now()})); 
+}
+
+function render(containerId, plan){ 
+  paypal.Buttons({ 
+    style: { layout:'vertical', color:'gold', shape:'rect', label:'paypal' }, 
+    createOrder:function(data,actions){ 
+      return actions.order.create({ 
+        purchase_units:[{ 
+          amount:{ value: plan.price, currency_code:'USD' }, 
+          description: 'MoneyTalks Plan: ' + plan.name 
+        }] 
+      }); 
+    }, 
+    onApprove:function(data,actions){ 
+      return actions.order.capture().then(function(details){ 
+        if(details && details.status === 'COMPLETED'){ 
+          activatePlanClient(plan); 
+          window.location.href = 'success.html?plan=' + plan.id + '&payment=paypal'; 
+        } else { 
+          alert('Payment not completed. Contact support.'); 
+        } 
+      }); 
+    }, 
+    onError:function(err){ 
+      console.error('PayPal:',err); 
+      alert('Payment failed. Try again.'); 
+    } 
+  }).render('#'+containerId); 
+}
+
+window.addEventListener('load', function(){ 
+  render('paypal-basic', MT_PLANS.basic); 
+  render('paypal-starter', MT_PLANS.starter); 
+  render('paypal-standard', MT_PLANS.standard); 
+  render('paypal-advanced', MT_PLANS.advanced); 
+  render('paypal-premium', MT_PLANS.premium); 
+  render('paypal-gold', MT_PLANS.gold); 
+});
+</script>
+
+<footer class="footer">
+  <div>© <span id="current-year"></span> MoneyTalks • Contact: <a href="mailto:themoneytalks.web@gmail.com" style="color:var(--muted);text-decoration:none;">themoneytalks.web@gmail.com</a></div>
+  <div class="footer-links">
+    <a href="about.html">About</a>
+    <a href="policy.html">Policy</a>
+    <a href="faq.html">FAQ</a>
+    <a href="index.html">Home</a>
+  </div>
+</footer>
+
+<script>
+// Set current year
+document.getElementById('current-year').textContent = new Date().getFullYear();
+</script>
+
+<!-- GLOBAL ENHANCEMENTS SCRIPT -->
+<script>
+// Global Enhancements for MoneyTalks
+function checkFirstVisit() { if (!localStorage.getItem('first_visit')) { setTimeout(() => { showNotification('👋 Welcome to MoneyTalks Plans!', 'info'); localStorage.setItem('first_visit', 'true'); }, 2000); } }
+function showPeriodicNotifications() { const n = ["💡 Complete daily goals!","🎰 Try the casino game!","👥 Invite friends!","📈 Upgrade your plan!"]; setInterval(() => { showNotification(n[Math.floor(Math.random()*n.length)], 'info'); }, 300000); }
+function showNotification(m,t='info') { const s={success:{bg:'#00E676',icon:'✅'},error:{bg:'#ff4757',icon:'❌'},warning:{bg:'#ffa502',icon:'⚠️'},info:{bg:'#8E2DE2',icon:'💡'}}[t]||{bg:'#8E2DE2',icon:'💡'}; document.querySelectorAll('.global-notification').forEach(e=>e.remove()); const n=document.createElement('div'); n.className='global-notification'; n.style.cssText=`position:fixed;top:20px;right:20px;background:${s.bg};color:white;padding:12px 20px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.3);z-index:10000;animation:slideIn 0.3s ease;display:flex;align-items:center;gap:10px;max-width:350px;font-family:Inter,sans-serif;`; n.innerHTML=`${s.icon} ${m}`; document.body.appendChild(n); setTimeout(()=>{n.style.animation='slideOut 0.3s ease';setTimeout(()=>n.remove(),300);},3000);}
+function initThemeToggle() { if(document.querySelector('.theme-toggle'))return; const t=localStorage.getItem('moneytalks_theme')||'dark'; applyTheme(t); const l=document.getElementById('mt_lang_selector_container'); if(l){ const b=document.createElement('div'); b.className='theme-toggle'; b.style.cssText=`display:inline-flex;align-items:center;gap:8px;font-weight:700;color:#cbd5e1;background:rgba(0,0,0,0.25);padding:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(4px);margin-left:8px;cursor:pointer;`; b.innerHTML=t=='dark'?'🌙':'☀️'; b.title='Toggle theme'; b.addEventListener('click',function(){ const c=localStorage.getItem('moneytalks_theme')||'dark'; const n=c=='dark'?'light':'dark'; localStorage.setItem('moneytalks_theme',n); applyTheme(n); this.innerHTML=n=='dark'?'🌙':'☀️'; showNotification(`${n} theme`,'info');}); l.parentNode.insertBefore(b,l.nextSibling);}}
+function applyTheme(t){ if(t=='light'){ document.documentElement.style.setProperty('--bg-dark','#f8fafc'); document.documentElement.style.setProperty('--bg-mid','#e2e8f0'); document.documentElement.style.setProperty('--text','#1e293b'); document.documentElement.style.setProperty('--muted','#64748b'); } else { document.documentElement.style.setProperty('--bg-dark','#0d0221'); document.documentElement.style.setProperty('--bg-mid','#0a0f2c'); document.documentElement.style.setProperty('--text','#ffffff'); document.documentElement.style.setProperty('--muted','#cbd5e1'); }}
+function initCopyFunctionality(){ document.addEventListener('click',function(e){ if(e.target.classList.contains('copy-btn')||e.target.closest('.copy-btn')){ const i=document.querySelector('input[readonly]')||e.target.previousElementSibling; if(i){ i.select(); navigator.clipboard.writeText(i.value).then(()=>{ showNotification('Copied!','success'); }); }}});}
+document.addEventListener('DOMContentLoaded',function(){ checkFirstVisit(); initThemeToggle(); initCopyFunctionality(); setTimeout(()=>showPeriodicNotifications(),10000); setTimeout(()=>{ document.querySelectorAll('.btn-primary').forEach(el=>{ el.classList.add('pulse'); setTimeout(()=>el.classList.remove('pulse'),6000);});},3000);});
+</script>
+</body>
+</html>
